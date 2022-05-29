@@ -1,0 +1,40 @@
+:root {
+  --color-background: #ededed;
+  --color-primary: #ffa41b;
+  --color-secondary: #ff5151;
+  --color-tertiary: #9818d6;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--color-background);
+  font-family: 'Merriweather', serif;
+}
+
+.content {
+  display: grid;
+  grid-template:
+    "header header" 50px 
+    "sidebar ." max(calc(100vh - 50px), 600px) 
+    / 200px auto;
+}
+
+.header {
+  grid-area: header;
+
+  background-color: var(--color-primary);
+  font-size: 30px;
+  color: var(--color-background);
+  padding-left: 30px;
+  padding-top: 4px;
+}
+
+.sidebar-container {
+  grid-area: sidebar;
+
+  box-shadow: 5px 3px 5px #adadad;
+}
