@@ -18,7 +18,7 @@ html {
   display: grid;
   grid-template:
     "header header" 50px 
-    "sidebar main" max(calc(100vh - 50px), 600px) 
+    "sidebar main" calc(100vh - 50px)
     / 250px auto;
 }
 
@@ -142,7 +142,9 @@ li[data-is-proj-child='1'] {
   align-items: center;
   align-content: start;
   grid-template-rows: 80px;
-  margin: 10px 30px 30px 60px;
+  margin: 10px 15px 30px 60px;
+  padding-right: 15px;
+  overflow-y: scroll;
 }
 
 .main-header-container {
