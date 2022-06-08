@@ -1,11 +1,11 @@
 import { newElement } from "./helperFunctions"
 
 const buildHeader = () => {
-  const header = newElement('div', 'header')
+  const header     = newElement('div', 'header')
   const newTaskBtn = newElement('button', 'new-task-btn')
 
   newTaskBtn.textContent = 'New Task'
-  header.textContent = '// TO-DO'
+  header.textContent     = '// TO-DO'
   
   header.append(newTaskBtn)
 
