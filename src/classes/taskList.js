@@ -21,10 +21,8 @@ class TaskList {
     this.amtAll++
 
     if (this.#shouldBeVisible(task)) {
-      console.log('yes')
-      
       this.visible.push(task)
-      this.visible.sort()
+      this.amtVisible += 1
     }
   }
 
@@ -37,7 +35,9 @@ class TaskList {
   }
 
   #shouldBeVisible(task) {
-    if (this.curFilter === '' && this.curFilter.project === '') return true
+    if (this.curFilter.priority === '' && this.curFilter.project === '') {
+      return true
+    }
 
     if (this.curFilter.priority) {
       if (task.priority === this.curFilter.priority) return true

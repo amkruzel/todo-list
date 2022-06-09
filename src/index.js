@@ -6,7 +6,13 @@ import buildHeader  from './buildHeader'
 import buildSidebar from './buildSidebar'
 import buildMain    from './buildMain'
 
-import { buildTaskFormModal, closeTaskForm, clearTaskForm } from './DOMmethods'
+import { 
+  buildTaskFormModal, 
+  buildProjectFormModal,
+  showForm,
+  closeAndClearForm,
+  refreshTasks,
+} from './DOMmethods'
 
 import Task        from './classes/task'
 import TaskList    from './classes/taskList'
@@ -21,49 +27,80 @@ const projectList = new ProjectList()
 
 const Content = document.querySelector('.content')
 
-const header  = buildHeader()
+const { header, newTaskBtn, newProjectBtn }  = buildHeader()
 const sidebar = buildSidebar()
 const main    = buildMain()
 
-const taskForm = buildTaskFormModal()
+const taskForm    = buildTaskFormModal()
+const projectForm = buildProjectFormModal()
 
-Content.append(header, sidebar, main, taskForm.modal)
+Content.append(header, sidebar, main, taskForm.modal, projectForm.modal)
 
-// New task button functionality
-const newTaskBtn = document.querySelector('.new-task-btn')
+//////////////////
+// Event listeners 
+//////////////////
 
-newTaskBtn.addEventListener('click', function() {
-  if (!Page.isTaskFormOpen) {
-    Page.isTaskFormOpen = true
-    taskForm.modal.style.display = 'block'
-    
-    //buildNewTaskForm(modal, taskSubmitBtn, formDiv ,formCloseBtn)
-  } else {
-    alert('You must save or close the current task before creating a new one.')
+header.addEventListener('click', function(e) {
+  if (e.target === newTaskBtn) {
+    if (!Page.isTaskFormOpen) {
+      Page.isTaskFormOpen = true
+      showForm(taskForm, projectList)
+    } else {
+      alert('You must save or close the current task before creating a new one.')
+    }
+  }
+
+  if (e.target === newProjectBtn) {
+    if (!Page.isProjectFormOpen) {
+      Page.isProjectFormOpen = true
+      showForm(projectForm)
+    } else {
+      alert('You must save or close the current project before creating a new one.')
+    }
   }
 })
 
-const closeAndClearForm = function() {
-  closeTaskForm(taskForm.modal)
-  clearTaskForm(
-    taskForm.name, 
-    taskForm.desc, 
-    taskForm.dueDate, 
-    taskForm.priority.high, 
-    taskForm.priority.med, 
-    taskForm.priority.low, 
-    taskForm.project)
-  Page.isTaskFormOpen = false
-}
-
 taskForm.closeBtn.addEventListener('click', function() {
-  closeAndClearForm()
+  closeAndClearForm(taskForm)
+  Page.isTaskFormOpen = false
+})
+
+projectForm.closeBtn.addEventListener('click', function() {
+  closeAndClearForm(projectForm)
+  Page.isProjectFormOpen = false
 })
 
 window.onclick = function(event) {
   if (event.target === taskForm.modal) {
-    closeAndClearForm()
+    closeAndClearForm(taskForm)
+    Page.isTaskFormOpen = false
   }
+
+  if (event.target === projectForm.modal) {
+    closeAndClearForm(projectForm)
+    Page.isProjectFormOpen = false
+  }
+
+}
+
+// This and the following function allow the priority radio buttons to be de-selected
+document
+  .querySelectorAll('input[type=radio][name=priority]')
+  .forEach((elem) => {
+  elem.addEventListener('click', allowUncheck);
+  // only needed if elem can be pre-checked
+  elem.previous = elem.checked;
+});
+
+function allowUncheck(e) {
+  if (this.previous) this.checked = false
+  // need to update previous on all elements of this group
+  // (either that or store the id of the checked element)
+  document
+  .querySelectorAll(`input[type=radio][name=${this.name}]`)
+  .forEach((elem) => {
+    elem.previous = elem.checked;
+  });
 }
 
 taskForm.submitBtn.addEventListener('click', function() {
@@ -86,7 +123,7 @@ taskForm.submitBtn.addEventListener('click', function() {
   let results = {
     name: taskForm.name.value,
     desc: taskForm.desc.value,
-    dueDate: taskForm.dueDate.value,
+    dueDate: new Date(taskForm.dueDate.value),
     priority: selectedPriority,
     project: taskForm.project.value
   }
@@ -95,35 +132,36 @@ taskForm.submitBtn.addEventListener('click', function() {
 
   console.log(results)
   
-  closeAndClearForm()
+  closeAndClearForm(taskForm)
   Page.isTaskFormOpen = false
-/*
-  taskForm.animate([
-    { transform: 'scale(1,1)' },
-    { transform: 'scale(0,0)' }
-  ], { duration: 500 },
-  function() {
-    taskForm.remove()
-  })
 
+  // return if new task does not show
+  // also show msg to user
 
-  let sc = 1
- 
+  // push new task to tasklist visibl
+  refreshTasks(main, taskList)
+})
 
-  setInterval(function() {
-    sc -= .1
-    taskForm.style.transform = 'scale(sc, sc)'
-    console.log(taskForm.style)
-    
-  }, 200)
+projectForm.submitBtn.addEventListener('click', function() {
+  if (!projectForm.name.value) {
+    alert('A project name is required.')
+    return
+  }
 
-  function doThis() { taskForm.remove() }
-  setInterval(doThis, 1000)
+  let results = {
+    name: projectForm.name,
+    desc: projectForm.desc,
+    color: projectForm.color.value
+  }
 
+  projectList.add(new Project(results))
 
-  
+  console.log(results)
 
-  console.log(taskList)
-  */
+  closeAndClearForm(projectForm)
+
+  Page.isProjectFormOpen = false
+
+  refreshProjects()
   
 })

@@ -9,7 +9,7 @@ const buildMain = () => {
 
   const mainHeaderContainer = newElement('div', 'main-header-container')
   const mainHeader = newElement('h3')
-  mainHeader.textContent = 'Today'
+  mainHeader.textContent = 'Tasks'
 
   const mainFilter = newElement('div')
   mainFilter.textContent = 'View'
@@ -20,11 +20,14 @@ const buildMain = () => {
   pracTaskRadio.setAttribute('type', 'checkbox')
   const pracTask = newElement('div')
   pracTask.textContent = 'Read work emails'
-  const pracTime = newElement('div')
+  const pracDate = newElement('div')
+  pracDate.classList.add('task-due-date')
+  pracDate.textContent = 'June 16, 2022'
 
   practiceTask.append(
     pracTaskRadio,
-    pracTask
+    pracTask,
+    pracDate
   )
 
   main

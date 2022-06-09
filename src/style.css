@@ -10,6 +10,12 @@
   padding: 0;
 }
 
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
 html {
   font-family: 'Raleway', sans-serif !important;
 }
@@ -20,6 +26,13 @@ html {
     "header header" 50px 
     "sidebar main" calc(100vh - 50px)
     / 250px auto;
+}
+
+button {
+  padding: 6px 8px;
+  border: none;
+  border-radius: 7px;
+  font-size: 18px;
 }
 
 /*////////
@@ -39,12 +52,12 @@ html {
 .header button {
   color: var(--color-background);
   background-color: rgba(234, 234, 234, .2);
-  padding: 6px 8px;
-  margin: 3px 40px;
-  border: none;
-  border-radius: 7px;
-  font-size: 18px;
+  margin: 3px 40px 3px 0px;
   float: right;
+}
+
+.header button:nth-of-type(2) {
+  margin-right: 20px;
 }
 
 .header button:hover {
@@ -62,6 +75,7 @@ html {
   background-color: #fafafa;
   font-size: 14px;
   font-weight: 400;
+  overflow-y: scroll;
 }
 
 .sidebar-container > div {
@@ -175,8 +189,7 @@ li[data-is-proj-child='1'] {
   padding-right: 5px;
 }
 
-.main-container > div:not(.main-header-container),
-.main-container > div:not(.modal) {
+.main-container > div:not(.main-header-container) {
   display: grid;
   align-items: center;
   gap: 4px;
@@ -185,8 +198,8 @@ li[data-is-proj-child='1'] {
   padding-top: 5px;
 }
 
-.main-container > div:not(.main-header-container).new-task-form {
-  grid-template: min-content / min-content;
+.task-due-date {
+  grid-area: 2 / 2 / 3 / 3;
 }
 
 /*////////////////
@@ -196,26 +209,26 @@ li[data-is-proj-child='1'] {
 /* form */
 
 form {
-  border: 1px solid gray;
   border-radius: 10px;
-  padding: 20px;
-  margin: 15px;
-
   display: grid;
+  align-items: center;
   gap: 7px;
 }
 
 /* text input */
 
-.main-container > div form input[type='text'] {
+input[type='text'] {
   border: none;
+  font-size: 18px;
+  padding: 2px;
   border-bottom: 1px solid black;
   margin-bottom: 10px;
+  margin-left: 5px;
 }
 
 /* text and textarea :focus; textarea */
 
-.main-container > div form input[type='text']:focus {
+input[type='text']:focus {
   outline: none;
 }
 
@@ -223,15 +236,18 @@ textarea,
 textarea:focus {
   outline: none;
   font-family: 'Raleway', sans-serif;
-  font-size: 13.5px;
+  font-size: 14px;
   border-radius: 7px;
   border: 1px solid black;
   box-shadow: none;
   padding: 5px;
 }
 
+/* Form priority selection */
+
 .form-priority-radios {
   display: grid;
+  gap: 5px;
   width: 50%;
   padding-top: 5px;
   grid-template: 20px / 20px 1fr;
@@ -241,6 +257,55 @@ textarea:focus {
   grid-area: 1 / 1 / 2 / 3;
 }
 
+.form-priority-radios input:hover,
+.form-priority-radios label:hover {
+  cursor: pointer;
+}
+
+/* Form submit button */
+
+.modal-content button {
+  width: 200px;
+  justify-self: center;
+  margin-top: 10px;
+}
+
+.modal-content button:hover {
+  cursor: pointer;
+}
+
+/* Form color selection */
+
+.color-container {
+  display: grid;
+  padding-top: 10px;
+  grid-auto-flow: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+form [type='color'] {
+  width: 150%;
+  height: 150%;
+  margin: -25%;
+}
+
+.color-selector-container {
+  overflow: hidden;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  /* optional formatting below here */
+  border-radius: 50%;
+  box-shadow: 1px 1px 3px 0px gray;
+}
+
+label[for='color']:hover,
+form [type='color']:hover {
+  cursor: pointer;
+}
+
+/* Main page styling */
 .main-container > div:not(.main-header-container):not(:last-child) {
   border-bottom: 1px solid gray;
 }
@@ -306,24 +371,28 @@ input[type='checkbox']:checked::before {
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  animation: fadeIn 0.4s;
 }
 
 /* Modal Content/Box */
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 40%; /* Could be more or less, depending on screen size */
+  box-shadow: 5px 5px 5px gray ;
+  overflow: hidden;
+  margin: 15% auto 0; /* 15% from the top and centered */
+  padding: 30px;
+  width: 400px; /* Could be more or less, depending on screen size */
   border-radius: 15px;
+  animation: fadeIn 0.4s;
 }
 
 /* The Close Button */
 .close {
   color: #aaa;
-  justify-self: end;
   font-size: 28px;
   font-weight: bold;
+  position: relative;
+  float: right;
 }
 
 .close:hover,
@@ -331,4 +400,9 @@ input[type='checkbox']:checked::before {
   color: black;
   text-decoration: none;
   cursor: pointer;
-} 
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

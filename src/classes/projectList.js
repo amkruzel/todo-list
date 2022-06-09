@@ -5,6 +5,10 @@ class ProjectList {
     this.#init()
   }
 
+  add(project) {
+    this.all.push(project)
+  }
+
   #init() {
     this.all = []
   }

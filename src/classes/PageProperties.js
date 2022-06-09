@@ -2,6 +2,7 @@
 
 class PageProperties {
   isTaskFormOpen
+  isProjectFormOpen
 }
 
 export default PageProperties

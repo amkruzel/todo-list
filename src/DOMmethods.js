@@ -1,12 +1,10 @@
-import { newElement, newOption, getDateTodayStr } from './helperFunctions'
+import { newElement, newOption, getDateTodayStr, randomColor } from './helperFunctions'
+import format from 'date-fns/format'
 
 /*////////////////////// 
 
 Description:
   Build form to get new task from user. It is built as a modal window
-
-Parameters:
-  projList - the current list of projects. Used to generate option inputs for the user to select a project to make the new task a part of
 
 Returns:
   modal     - the modal div, which contains the form
@@ -21,7 +19,7 @@ Returns:
 
 //////////////////////*/
 
-const buildTaskFormModal = (projList = []) => {
+const buildTaskFormModal = () => {
 
   const modal   = newElement('div', 'modal')
   const formDiv = newElement('div', 'new-task-form', 'modal-content')
@@ -68,7 +66,7 @@ const buildTaskFormModal = (projList = []) => {
   name.id          = 'name'
 
   desc.rows        = '5'
-  desc.cols        = '40'
+  desc.cols        = '36'
   desc.placeholder = 'Description...'
   desc.id          = 'desc'
 
@@ -110,20 +108,10 @@ const buildTaskFormModal = (projList = []) => {
   const dueDateContainer = newElement('div')
   const projectContainer = newElement('div')
 
-  nameContainer.append(nameLabel, name)
+  nameContainer.append(nameLabel, name, formCloseBtn)
   descContainer.append(descLabel, desc)
   dueDateContainer.append(dueDateLabel, dueDate)
   projectContainer.append(projectLabel, project)
-
-  project.append(
-    newOption('none', 'None')
-  )
-  
-  projList.forEach((proj) => {
-    project.append(
-      newOption(proj.value, proj.name)
-    )
-  })
 
   const priorityContainer = newElement('div', 'form-priority-radios')
   priorityContainer.append(
@@ -137,7 +125,6 @@ const buildTaskFormModal = (projList = []) => {
   )
 
   form.append(
-    formCloseBtn, 
     nameContainer,
     descContainer,
     priorityContainer,
@@ -150,30 +137,211 @@ const buildTaskFormModal = (projList = []) => {
 
   modal.append(formDiv)
 
-    return {
-      modal,
-      name,
-      desc,
-      dueDate,
-      project,
-      closeBtn: formCloseBtn,
-      submitBtn: taskSubmitBtn,
-      priority: {
-        high: highPriority,
-        med: medPriority,
-        low: lowPriority
-      }
+  return {
+    modal,
+    name,
+    desc,
+    dueDate,
+    project,
+    context: 'task',
+    closeBtn: formCloseBtn,
+    submitBtn: taskSubmitBtn,
+    priority: {
+      high: highPriority,
+      med: medPriority,
+      low: lowPriority
     }
+  }
 }
 
-const clearTaskForm = (...elements) => {
+/*////////////////////// 
+
+Description:
+  Build form to get new project from user. It is built as a modal window
+
+Returns:
+  modal     - the modal div, which contains the form
+  name      - project name input
+  desc      - project description input
+  color     - color used to distinguish the project
+  closeBtn  - the button that can be clicked to close the form
+  submitBtn - the button that can be clicked to submit the form
+
+//////////////////////*/
+
+const buildProjectFormModal = () => {
+  const modal      = newElement('div', 'modal')
+  const projectDiv = newElement('div', 'new-proj-form', 'modal-content')
+  const form       = newElement('form')
+
+  // Form element labels
+  const nameLabel         = newElement('label')
+  const descLabel         = newElement('label')
+  const colorLabel        = newElement('label')
+
+  // Associate labels with inputs
+  nameLabel.setAttribute('for', 'name')
+  descLabel.setAttribute('for', 'desc')
+  colorLabel.setAttribute('for', 'color')
+
+  colorLabel.textContent  = 'Color (used to identify the project): '
+
+  // Create inputs
+  const name          = newElement('input')
+  const desc          = newElement('textarea')
+  const color         = newElement('input')
+  const projectSubmitBtn = newElement('button') 
+  const formCloseBtn  = newElement('span', 'close')
+
+  // Misc. attributes for each input
+  name.type        = 'text'
+  name.placeholder = 'Name'
+  name.maxlength   = '20'
+  name.id          = 'name'
+
+  desc.rows        = '5'
+  desc.cols        = '36'
+  desc.placeholder = 'Description...'
+  desc.id          = 'desc'
+
+  color.type  = 'color'
+  color.id    = 'color'
+
+  projectSubmitBtn.type        = 'button'
+  projectSubmitBtn.textContent = 'Add'
+  projectSubmitBtn.classList.add('new-task-proj-btn')
+
+  formCloseBtn.textContent = '\u2715'
+
+  // Input containers
+  const nameContainer    = newElement('div')
+  const descContainer    = newElement('div')
+  const colorContainer   = newElement('div', 'color-container')
+
+  // Need an additional one for color to style it
+  const colorSelectorcontainer = newElement('span')
+  colorSelectorcontainer.classList.add('color-selector-container')
+
+  colorSelectorcontainer.append(color)
+
+  nameContainer.append(nameLabel, name, formCloseBtn)
+  descContainer.append(descLabel, desc)
+  colorContainer.append(colorLabel, colorSelectorcontainer)
+
+
+  form.append(
+    nameContainer,
+    descContainer,
+    colorContainer,
+    projectSubmitBtn
+  )
+
+  projectDiv.append(form)
+
+  modal.append(projectDiv)
+
+  return {
+    modal,
+    name,
+    desc,
+    color,
+    context: 'project',
+    closeBtn: formCloseBtn,
+    submitBtn: projectSubmitBtn,
+  }
+}
+
+const showForm = (form, projList = []) => {
+  if (form.context === 'task') {
+    projList.all.forEach((proj) => {
+      taskForm.project.append(
+        newOption(proj.value, proj.name)
+      )
+    })
+  }
+
+  if (form.context === 'project') {
+    form.color.value = randomColor()
+  }
+
+  form.modal.style.display = 'block'
+}
+
+const _clearForm = (...elements) => {
   elements.forEach((el) => {
     el.value = ''
   })
 }
 
-const closeTaskForm = (form) => {
+const _closeForm = (form) => {
   form.style.display = 'none'
 }
 
-export { buildTaskFormModal, clearTaskForm, closeTaskForm }
+const _createTask = (t) => {
+  const taskDiv = newElement('div')
+  const taskRadio = newElement('input')
+  taskRadio.setAttribute('type', 'checkbox')
+  const task = newElement('div')
+  task.textContent = t.name
+  const taskDate = newElement('div')
+  taskDate.classList.add('task-due-date')
+  taskDate.textContent = format(t.dueDate, 'MMMM dd, yyyy')
+
+  taskDiv.append(
+    taskRadio,
+    task,
+    taskDate
+  )
+
+  return taskDiv
+}
+
+const closeAndClearForm = (form) => {
+  _closeForm(form.modal)
+  if (form.context === 'task') {
+    _clearForm(
+      form.name, 
+      form.desc, 
+      form.dueDate, 
+      form.priority.high, 
+      form.priority.med, 
+      form.priority.low, 
+      form.project
+    )
+  } 
+  if (form.context === 'project') {
+    _clearForm(
+      form.name,
+      form.desc,
+      form.color
+    )
+  }
+}
+
+
+const refreshTasks = (main, taskList) => {
+  taskList.sort()
+
+  let header = main.firstChild
+
+  console.log(taskList.visible)
+
+  main.replaceChildren(header)
+
+  taskList.visible.forEach(function(task) {
+    main.append(_createTask(task))
+  })
+}
+
+const refreshProjects = () => {
+  
+}
+
+export { 
+  buildTaskFormModal, 
+  buildProjectFormModal,
+  showForm,
+  closeAndClearForm,
+  refreshTasks, 
+  refreshProjects
+}
