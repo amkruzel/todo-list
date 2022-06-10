@@ -294,6 +294,7 @@ const DOMmethods = () => {
       taskDate
     )
 
+    // If the task is in a project, color the left border the correct color
     if (t.project) {
       projects.all.forEach(function(proj) {
         if (proj.id == t.project) {
