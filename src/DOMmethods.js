@@ -255,9 +255,10 @@ const DOMmethods = () => {
     if (form.context === 'task') {
       projList.all.forEach((proj) => {
         form.project.append(
-          newOption(proj.value, proj.name)
+          newOption(proj.id, proj.name)
         )
       })
+      form.project.append(newOption('', 'None'))
     }
 
     if (form.context === 'project') {
@@ -338,9 +339,7 @@ const DOMmethods = () => {
     taskList.sort()
 
     let header = main.firstChild
-
-    console.log(taskList.visible)
-
+    
     main.replaceChildren(header)
 
     taskList.visible.forEach(function(task) {

@@ -41,6 +41,7 @@ header.addEventListener('click', function(e) {
     if (!Page.isTaskFormOpen) {
       Page.isTaskFormOpen = true
       DOM.showForm(taskForm, projectList)
+      
     } else {
       alert('You must save or close the current task before creating a new one.')
     }
@@ -124,7 +125,17 @@ taskForm.submitBtn.addEventListener('click', function() {
     project: taskForm.project.value
   }
 
-  taskList.add(new Task(results))
+  let newTask = new Task(results)
+  taskList.add(newTask)
+
+  // Add task to project if one is selected
+  if (taskForm.project.value) {
+    projectList.all.forEach(function(proj) {
+      if (proj.id == newTask.project) {
+        proj.tasks.add(newTask)
+      }
+    })
+  }
   
   DOM.closeAndClearForm(taskForm)
   Page.isTaskFormOpen = false
