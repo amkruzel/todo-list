@@ -128,13 +128,17 @@ taskForm.submitBtn.addEventListener('click', function() {
   let newTask = new Task(results)
   taskList.add(newTask)
 
-  // Add task to project if one is selected
+  // If task is added to a project, must do these things:
   if (taskForm.project.value) {
     projectList.all.forEach(function(proj) {
       if (proj.id == newTask.project) {
+        // Add task to project if one is selected
         proj.tasks.add(newTask)
       }
     })
+
+    // Update sidebar
+    DOM.refreshProjects(ulProjects, projectList)
   }
   
   DOM.closeAndClearForm(taskForm)
@@ -144,7 +148,7 @@ taskForm.submitBtn.addEventListener('click', function() {
   // also show msg to user
 
   // push new task to tasklist visibl
-  DOM.refreshTasks(main, taskList)
+  DOM.refreshTasks(main, taskList, projectList)
 })
 
 projectForm.submitBtn.addEventListener('click', function() {
@@ -166,5 +170,4 @@ projectForm.submitBtn.addEventListener('click', function() {
   Page.isProjectFormOpen = false
 
   DOM.refreshProjects(ulProjects, projectList)
-
 })

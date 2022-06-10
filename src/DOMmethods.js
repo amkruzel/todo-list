@@ -278,7 +278,7 @@ const DOMmethods = () => {
     form.style.display = 'none'
   }
 
-  const _createTask = (t) => {
+  const _createTask = (t, projects) => {
     const taskDiv = newElement('div')
     const taskRadio = newElement('input')
     taskRadio.setAttribute('type', 'checkbox')
@@ -294,12 +294,19 @@ const DOMmethods = () => {
       taskDate
     )
 
+    if (t.project) {
+      projects.all.forEach(function(proj) {
+        if (proj.id == t.project) {
+          taskDiv.style.borderLeft = `2px solid ${proj.color}`
+        }
+      })
+    }
     return taskDiv
   }
 
   const _createProject = (p) => {
     const projLi = newElement('li', 'extra-chevron')
-    const projLiSpan = newElement('span')
+    const projLiSpan = newElement('div')
 
     projLi.dataset.isProjParent = '1'
     projLi.dataset.projName = p.name
@@ -310,6 +317,20 @@ const DOMmethods = () => {
     projLi.prepend(p.chevronDown)
 
     return projLi
+  }
+
+  const _createProjectTask = (task, p) => {
+    const taskLi = newElement('li')
+    const taskLiSpan = newElement('div')
+
+    taskLi.dataset.isProjChild = '1'
+    taskLi.dataset.projParent = task.project
+    taskLiSpan.innerHTML = p.icon
+
+    taskLi.textContent = task.name
+    taskLi.prepend(taskLiSpan)
+
+    return taskLi
   }
 
   const closeAndClearForm = (form) => {
@@ -334,16 +355,15 @@ const DOMmethods = () => {
     }
   }
 
-
-  const refreshTasks = (main, taskList) => {
+  const refreshTasks = (main, taskList, projectList) => {
     taskList.sort()
 
     let header = main.firstChild
-    
+
     main.replaceChildren(header)
 
     taskList.visible.forEach(function(task) {
-      main.append(_createTask(task))
+      main.append(_createTask(task, projectList))
     })
   }
 
@@ -353,6 +373,11 @@ const DOMmethods = () => {
     projectUl.replaceChildren(header)
 
     projectList.all.forEach(function(proj) {
+      if (proj.tasks.all.length > 0) {
+        proj.tasks.all.forEach(function(t) {
+          header.after(_createProjectTask(t, proj))
+        })
+      }
       header.after(_createProject(proj))
     })
   }

@@ -110,11 +110,13 @@ li.extra-chevron {
   left: -15px;
 }
 
-li.extra-chevron img:last-child {
+li.extra-chevron img:last-child,
+li.extra-chevron div:last-child {
   padding-right: 5px;
 }
 
-li img {
+li img,
+li div {
   justify-self: center;
 }
 
