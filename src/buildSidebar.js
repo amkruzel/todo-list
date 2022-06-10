@@ -39,7 +39,7 @@ const buildSidebar = () => {
   const circleBlueIcon   = newImg(circleBlueSvg)
   
   // Div containers
-  const sidebarContainer = newElement('div', 'sidebar-container')
+  const sidebar = newElement('div', 'sidebar-container')
 
   const mainTasksContainer = newElement('div')
   const favoritesContainer = newElement('div')
@@ -111,7 +111,7 @@ const buildSidebar = () => {
   personalFamily.dataset.projParent = 'personal'
 
   // Putting everything together
-  sidebarContainer
+  sidebar
     .appendChild(mainTasksContainer)
     .appendChild(ulMain)
     .append(
@@ -120,7 +120,7 @@ const buildSidebar = () => {
       mainFilter
     )
 
-  sidebarContainer
+  sidebar
     .appendChild(favoritesContainer)
     .appendChild(ulFavorites)
     .append(
@@ -130,7 +130,7 @@ const buildSidebar = () => {
       favoritesCalendar
     )
   
-  sidebarContainer
+  sidebar
     .appendChild(ProjectsContainer)
     .appendChild(ulProjects)
     .append(
@@ -141,7 +141,7 @@ const buildSidebar = () => {
       projectsWork
     )
 
-  return sidebarContainer
+  return { sidebar, ulProjects }
 }
 
 export default buildSidebar

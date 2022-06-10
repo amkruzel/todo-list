@@ -296,6 +296,21 @@ const _createTask = (t) => {
   return taskDiv
 }
 
+const _createProject = (p) => {
+  const projLi = newElement('li', 'extra-chevron')
+  const projLiSpan = newElement('span')
+
+  projLi.dataset.isProjParent = '1'
+  projLi.dataset.projName = p.name
+  projLiSpan.innerHTML = p.icon
+
+  projLi.textContent = p.name
+  projLi.prepend(projLiSpan)
+  projLi.prepend(p.chevronDown)
+
+  return projLi
+}
+
 const closeAndClearForm = (form) => {
   _closeForm(form.modal)
   if (form.context === 'task') {
@@ -333,8 +348,16 @@ const refreshTasks = (main, taskList) => {
   })
 }
 
-const refreshProjects = () => {
-  
+const refreshProjects = (projectUl, projectList) => {
+  console.log(projectList.all)
+
+  let header = projectUl.firstChild
+
+  projectUl.replaceChildren(header)
+
+  projectList.all.forEach(function(proj) {
+    header.after(_createProject(proj))
+  })
 }
 
 export { 

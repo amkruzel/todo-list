@@ -11,7 +11,7 @@ class Project {
     this.name        = obj.name
     this.desc        = obj.desc
     this.color       = obj.color
-    this.icon        = newProjectIcon(color)
+    this.icon        = newProjectIcon(obj.color)
     this.chevronDown = newImg(chevronDownSmallSvg)
     this.#init()
   }

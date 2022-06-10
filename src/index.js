@@ -12,6 +12,7 @@ import {
   showForm,
   closeAndClearForm,
   refreshTasks,
+  refreshProjects
 } from './DOMmethods'
 
 import Task        from './classes/task'
@@ -28,7 +29,7 @@ const projectList = new ProjectList()
 const Content = document.querySelector('.content')
 
 const { header, newTaskBtn, newProjectBtn }  = buildHeader()
-const sidebar = buildSidebar()
+const { sidebar, ulProjects } = buildSidebar()
 const main    = buildMain()
 
 const taskForm    = buildTaskFormModal()
@@ -149,8 +150,8 @@ projectForm.submitBtn.addEventListener('click', function() {
   }
 
   let results = {
-    name: projectForm.name,
-    desc: projectForm.desc,
+    name: projectForm.name.value,
+    desc: projectForm.desc.value,
     color: projectForm.color.value
   }
 
@@ -162,6 +163,6 @@ projectForm.submitBtn.addEventListener('click', function() {
 
   Page.isProjectFormOpen = false
 
-  refreshProjects()
-  
+  refreshProjects(ulProjects, projectList)
+
 })
