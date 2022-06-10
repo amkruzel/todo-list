@@ -6,14 +6,7 @@ import buildHeader  from './buildHeader'
 import buildSidebar from './buildSidebar'
 import buildMain    from './buildMain'
 
-import { 
-  buildTaskFormModal, 
-  buildProjectFormModal,
-  showForm,
-  closeAndClearForm,
-  refreshTasks,
-  refreshProjects
-} from './DOMmethods'
+import DOMmethods from './DOMmethods'
 
 import Task        from './classes/task'
 import TaskList    from './classes/taskList'
@@ -32,8 +25,10 @@ const { header, newTaskBtn, newProjectBtn }  = buildHeader()
 const { sidebar, ulProjects } = buildSidebar()
 const main    = buildMain()
 
-const taskForm    = buildTaskFormModal()
-const projectForm = buildProjectFormModal()
+
+const DOM         = DOMmethods()
+const taskForm    = DOM.buildTaskFormModal()
+const projectForm = DOM.buildProjectFormModal()
 
 Content.append(header, sidebar, main, taskForm.modal, projectForm.modal)
 
@@ -45,7 +40,7 @@ header.addEventListener('click', function(e) {
   if (e.target === newTaskBtn) {
     if (!Page.isTaskFormOpen) {
       Page.isTaskFormOpen = true
-      showForm(taskForm, projectList)
+      DOM.showForm(taskForm, projectList)
     } else {
       alert('You must save or close the current task before creating a new one.')
     }
@@ -54,7 +49,7 @@ header.addEventListener('click', function(e) {
   if (e.target === newProjectBtn) {
     if (!Page.isProjectFormOpen) {
       Page.isProjectFormOpen = true
-      showForm(projectForm)
+      DOM.showForm(projectForm)
     } else {
       alert('You must save or close the current project before creating a new one.')
     }
@@ -62,23 +57,23 @@ header.addEventListener('click', function(e) {
 })
 
 taskForm.closeBtn.addEventListener('click', function() {
-  closeAndClearForm(taskForm)
+  DOM.closeAndClearForm(taskForm)
   Page.isTaskFormOpen = false
 })
 
 projectForm.closeBtn.addEventListener('click', function() {
-  closeAndClearForm(projectForm)
+  DOM.closeAndClearForm(projectForm)
   Page.isProjectFormOpen = false
 })
 
 window.onclick = function(event) {
   if (event.target === taskForm.modal) {
-    closeAndClearForm(taskForm)
+    DOM.closeAndClearForm(taskForm)
     Page.isTaskFormOpen = false
   }
 
   if (event.target === projectForm.modal) {
-    closeAndClearForm(projectForm)
+    DOM.closeAndClearForm(projectForm)
     Page.isProjectFormOpen = false
   }
 
@@ -130,17 +125,15 @@ taskForm.submitBtn.addEventListener('click', function() {
   }
 
   taskList.add(new Task(results))
-
-  console.log(results)
   
-  closeAndClearForm(taskForm)
+  DOM.closeAndClearForm(taskForm)
   Page.isTaskFormOpen = false
 
   // return if new task does not show
   // also show msg to user
 
   // push new task to tasklist visibl
-  refreshTasks(main, taskList)
+  DOM.refreshTasks(main, taskList)
 })
 
 projectForm.submitBtn.addEventListener('click', function() {
@@ -157,12 +150,10 @@ projectForm.submitBtn.addEventListener('click', function() {
 
   projectList.add(new Project(results))
 
-  console.log(results)
-
-  closeAndClearForm(projectForm)
+  DOM.closeAndClearForm(projectForm)
 
   Page.isProjectFormOpen = false
 
-  refreshProjects(ulProjects, projectList)
+  DOM.refreshProjects(ulProjects, projectList)
 
 })
