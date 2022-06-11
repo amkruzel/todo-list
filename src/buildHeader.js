@@ -8,10 +8,13 @@ const buildHeader = () => {
   newTaskBtn.textContent    = 'New Task'
   newProjectBtn.textContent = 'New Project'
   header.textContent        = '// TO-DO'
-  
-  header.append(newTaskBtn, newProjectBtn)
 
-  return { header, newTaskBtn, newProjectBtn }
+  const clearStorageBtn = newElement('button', 'new-item-btn', 'clear-storage')
+  clearStorageBtn.textContent = 'Clear localStorage'
+  
+  header.append(newTaskBtn, newProjectBtn, clearStorageBtn)
+
+  return { header, newTaskBtn, newProjectBtn, clearStorageBtn }
 }
 
 export default buildHeader

@@ -13,7 +13,7 @@ class Project {
     this.color       = obj.color
     this.icon        = newProjectIcon(obj.color)
     this.chevronDown = newImg(chevronDownSmallSvg)
-    this.id          = Date.now()
+    this.id          = obj.id
     this.#init()
   }
 

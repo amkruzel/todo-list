@@ -1,3 +1,5 @@
+import { format } from "date-fns"
+
 function newElement(type, ...classes) {
   let el = document.createElement(type)
   classes.forEach((cl) => {
@@ -25,15 +27,7 @@ function newProjectIcon(hex) {
 }
 
 function getDateTodayStr() {
-  let date = new Date()
-  let year = date.getFullYear()
-  let month = date.getMonth() + 1
-  let day = date.getDate()
-
-  if (month < 10) month = `0${month}`
-  if (day < 10) day = `0${day}`
-
-  return `${year}-${month}-${day}`
+  return format(new Date(), 'uuuu-MM-dd')
 }
 
 function randomColor() {
