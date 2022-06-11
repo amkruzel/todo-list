@@ -20,6 +20,9 @@ const buildMain = () => {
   filterDateAsc.textContent  = 'Date ↑'
   filterDateDesc.textContent = 'Date ↓'
 
+  filterDateAsc.dataset.filterType  = 'dateAsc'
+  filterDateDesc.dataset.filterType = 'dateDesc'
+
   mainFilterContent.append(
     filterDateAsc,
     filterDateDesc
@@ -28,35 +31,12 @@ const buildMain = () => {
   mainFilter.textContent = 'View'
   mainFilter.prepend(viewIcon)
   mainFilter.append(mainFilterContent)
-  
-  /*
-  const practiceTask = newElement('div')
-  const pracTaskRadio = newElement('input')
-  pracTaskRadio.setAttribute('type', 'checkbox')
-  const pracTask = newElement('div')
-  pracTask.textContent = 'Read work emails'
-  const pracDate = newElement('div')
-  pracDate.classList.add('task-due-date')
-  pracDate.textContent = 'June 16, 2022'
-
-  practiceTask.append(
-    pracTaskRadio,
-    pracTask,
-    pracDate
-  )
-  
-  main.append(
-    practiceTask,
-    newElement('div'),
-    newElement('div'),
-    newElement('div'))
-  
-    */
 
   main
   .appendChild(mainHeaderContainer)
   .append(mainHeader, mainFilter)
-  return main
+
+  return { main, mainFilter }
 }
 
 export default buildMain

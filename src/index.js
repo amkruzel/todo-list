@@ -23,7 +23,7 @@ const Content = document.querySelector('.content')
 
 const { header, newTaskBtn, newProjectBtn }  = buildHeader()
 const { sidebar, ulProjects } = buildSidebar()
-const main    = buildMain()
+const { main, mainFilter }    = buildMain()
 
 
 const DOM         = DOMmethods()
@@ -57,6 +57,14 @@ header.addEventListener('click', function(e) {
   }
 })
 
+mainFilter.addEventListener('click', function(e) {
+  DOM.refreshTasks(
+    main, 
+    taskList, 
+    projectList, 
+    e.target.dataset.filterType)
+})
+
 taskForm.closeBtn.addEventListener('click', function() {
   DOM.closeAndClearForm(taskForm)
   Page.isTaskFormOpen = false
@@ -78,26 +86,6 @@ window.onclick = function(event) {
     Page.isProjectFormOpen = false
   }
 
-}
-
-// This and the following function allow the priority radio buttons to be de-selected
-document
-  .querySelectorAll('input[type=radio][name=priority]')
-  .forEach((elem) => {
-  elem.addEventListener('click', allowUncheck);
-  // only needed if elem can be pre-checked
-  elem.previous = elem.checked;
-});
-
-function allowUncheck(e) {
-  if (this.previous) this.checked = false
-  // need to update previous on all elements of this group
-  // (either that or store the id of the checked element)
-  document
-  .querySelectorAll(`input[type=radio][name=${this.name}]`)
-  .forEach((elem) => {
-    elem.previous = elem.checked;
-  });
 }
 
 taskForm.submitBtn.addEventListener('click', function() {
@@ -147,7 +135,7 @@ taskForm.submitBtn.addEventListener('click', function() {
   // return if new task does not show
   // also show msg to user
 
-  // push new task to tasklist visibl
+  // push new task to tasklist visible
   DOM.refreshTasks(main, taskList, projectList)
 })
 
@@ -171,3 +159,23 @@ projectForm.submitBtn.addEventListener('click', function() {
 
   DOM.refreshProjects(ulProjects, projectList)
 })
+
+// This and the following function allow the priority radio buttons to be de-selected
+document
+  .querySelectorAll('input[type=radio][name=priority]')
+  .forEach((elem) => {
+  elem.addEventListener('click', allowUncheck);
+  // only needed if elem can be pre-checked
+  elem.previous = elem.checked;
+});
+
+function allowUncheck(e) {
+  if (this.previous) this.checked = false
+  // need to update previous on all elements of this group
+  // (either that or store the id of the checked element)
+  document
+  .querySelectorAll(`input[type=radio][name=${this.name}]`)
+  .forEach((elem) => {
+    elem.previous = elem.checked;
+  });
+}

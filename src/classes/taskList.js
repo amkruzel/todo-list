@@ -26,8 +26,23 @@ class TaskList {
     }
   }
 
-  sort() {
+  /*
+  sortType is one of:
+  - 'dateAsc'
+  - 'dateDesc'
+  */
+  sort(sortType) {
+    let tmp = this.visible
 
+    if (sortType === 'dateAsc') {
+      return tmp.sort((a, b) => a.dueDate - b.dueDate)
+    }
+
+    if (sortType === 'dateDesc') {
+      return tmp.sort((a, b) => b.dueDate - a.dueDate)
+    }
+
+    return tmp
   }
 
   filter() {

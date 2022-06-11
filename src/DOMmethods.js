@@ -356,14 +356,14 @@ const DOMmethods = () => {
     }
   }
 
-  const refreshTasks = (main, taskList, projectList) => {
-    taskList.sort()
+  const refreshTasks = (main, taskList, projectList, sortType = '') => {
+    let ary = taskList.sort(sortType)
 
     let header = main.firstChild
 
     main.replaceChildren(header)
 
-    taskList.visible.forEach(function(task) {
+    ary.forEach(function(task) {
       main.append(_createTask(task, projectList))
     })
   }
