@@ -1,12 +1,11 @@
 import './style.css'
 
-import { newElement, newImg } from './helperFunctions'
-
 import buildHeader  from './buildHeader'
 import buildSidebar from './buildSidebar'
 import buildMain    from './buildMain'
 
 import DOMmethods from './DOMmethods'
+import LoadData   from './localStorage'
 
 import Task        from './classes/task'
 import TaskList    from './classes/taskList'
@@ -14,27 +13,6 @@ import Project     from './classes/project'
 import ProjectList from './classes/projectList'
 
 import PageProperties from './classes/PageProperties'
-
-import Database from './localStorage'
-import buildClasses from './buildClasses'
-
-/*
-const Page
-const taskList
-const projectList
-
-window.addEventListener('load', function() {
-  try {
-    ({ Page, projectList, taskList } = Data.load())
-  } catch {
-    Page        = new PageProperties()
-    taskList    = new TaskList()
-    projectList = new ProjectList()
-  }
-})
-*/
-
-
 
 const Content = document.querySelector('.content')
 
@@ -46,88 +24,22 @@ const { main, mainFilter }    = buildMain()
 const DOM         = DOMmethods()
 const taskForm    = DOM.buildTaskFormModal()
 const projectForm = DOM.buildProjectFormModal()
-/*
-if (!localStorage.getItem('Page')) {
-  const { Page, taskList, projectList } = buildClasses()
-} else {
-
-}
-*/
+const taskDetails = DOM.buildTaskDetailsModal()
 
 const Page        = new PageProperties()
 const taskList    = new TaskList()
 const projectList = new ProjectList()
 
-if (localStorage.getItem('projectList')) {
-  let pl = JSON.parse(localStorage.getItem('projectList'))
-  pl.all.forEach(function(p) {
-    projectList.add(new Project( {
-      name: p.name,
-      desc: p.desc,
-      color: p.color,
-      id: p.id
-    }))
-  })
-}
+LoadData(taskList, projectList)
 
-if (localStorage.getItem('taskList')) {
-  let tl = JSON.parse(localStorage.getItem('taskList'))
-  tl.all.forEach(function(t) {
-    taskList.add(new Task( { 
-      name: t.name,
-      desc: t.desc,
-      dueDate: new Date(t.dueDate),
-      priority: t.priority,
-      project: t.project  
-    }))
-
-    // If task is added to a project, must do these things:
-    if (t.project) {
-      projectList.all.forEach(function(proj) {
-        if (proj.id == t.project) {
-          // Add task to project if one is selected
-          proj.tasks.add(t)
-        }
-      })
-    }
-  })
-}
-
-
-/*
-const { Page, taskList, projectList } = (() => {
-  if (!localStorage.getItem('Page')) {
-    console.log('no LC')
-    return buildClasses()
-  } else {
-    console.log('LC')
-    console.log(JSON.parse(localStorage.getItem('taskList')))
-    
-    return {
-      Page: JSON.parse(localStorage.getItem('Page')),
-      taskList: JSON.parse(localStorage.getItem('taskList')),
-      projectList: JSON.parse(localStorage.getItem('projectList'))
-    }
-  }
-})()
-*/
-
-/*
-const Data = Database()
-
-const Page = Data.load('Page') ? Data.load('Page') : new PageProperties()
-const taskList = Data.load('taskList') ? Data.load('taskList') : new TaskList()
-const projectList = Data.load('projectList') ? Data.load('projectList') : new ProjectList()
-
-window.addEventListener('load', function() {
-  console.log(taskList)
-  
-  DOM.refreshProjects(ulProjects, projectList)
-  DOM.refreshTasks(main, taskList, projectList)
-})
-
-*/
-Content.append(header, sidebar, main, taskForm.modal, projectForm.modal)
+Content.append(
+  header, 
+  sidebar, 
+  main, 
+  taskForm.modal, 
+  projectForm.modal, 
+  taskDetails.modal
+)
 
 DOM.refreshTasks(main, taskList, projectList)
 DOM.refreshProjects(ulProjects, projectList)
@@ -158,11 +70,7 @@ header.addEventListener('click', function(e) {
 
   if (e.target === clearStorageBtn) {
     localStorage.clear()
-    console.log('clear')
-    
   }
-  console.log(e.target)
-  
 })
 
 mainFilter.addEventListener('click', function(e) {
@@ -183,6 +91,10 @@ projectForm.closeBtn.addEventListener('click', function() {
   Page.isProjectFormOpen = false
 })
 
+taskDetails.closeBtn.addEventListener('click', function() {
+  DOM.closeAndClearForm(taskDetails)
+})
+
 window.onclick = function(event) {
   if (event.target === taskForm.modal) {
     DOM.closeAndClearForm(taskForm)
@@ -194,7 +106,21 @@ window.onclick = function(event) {
     Page.isProjectFormOpen = false
   }
 
+  if (event.target === taskDetails.modal) {
+    DOM.closeAndClearForm(taskDetails)
+  }
 }
+
+main.addEventListener('click', function(e) {
+  if (!e.target.classList.contains('task-name')) return
+  
+  taskList.all.forEach(function(t) {
+    if (t.id == e.target.dataset.taskId) {
+      console.log(t, e.target)
+      DOM.showForm(taskDetails, projectList, t)
+    }
+  })
+})
 
 taskForm.submitBtn.addEventListener('click', function() {
   
@@ -218,7 +144,8 @@ taskForm.submitBtn.addEventListener('click', function() {
     desc: taskForm.desc.value,
     dueDate: new Date(taskForm.dueDate.value.replace(/-/g, '\/')),
     priority: selectedPriority,
-    project: taskForm.project.value
+    project: taskForm.project.value,
+    id: Date.now()
   }
 
   let newTask = new Task(results)
@@ -245,7 +172,6 @@ taskForm.submitBtn.addEventListener('click', function() {
 
   // push new task to tasklist visible
   DOM.refreshTasks(main, taskList, projectList)
-  console.log(JSON.stringify(taskList))
   
   localStorage.setItem('projectList', JSON.stringify(projectList))
   localStorage.setItem('taskList', JSON.stringify(taskList))

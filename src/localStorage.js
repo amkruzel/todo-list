@@ -1,31 +1,44 @@
-// methods to store and retrieve data
+// methods for storing and retrieving data from local storage
 
-/*
-Data will be saved in two objects:
+import Project from "./classes/project"
+import Task    from "./classes/task"
 
-{ 'page': Page }
-- this is the Page object
-
-{ 'state':
-  { page,
-    projectList,
-    taskList } }
-- this is the projectList and taskList objects
-
-*/
-
-const Database = () => {
-  const save = (page, projLi, taskLi) => {
-    localStorage.setItem('Page', JSON.stringify(page))
-    localStorage.setItem('projectList', JSON.stringify(projLi))
-    localStorage.setItem('taskList', JSON.stringify(taskLi))
+const LoadData = (taskList, projectList) => {
+  if (localStorage.getItem('projectList')) {
+    let pl = JSON.parse(localStorage.getItem('projectList'))
+    pl.all.forEach(function(p) {
+      projectList.add(new Project( {
+        name: p.name,
+        desc: p.desc,
+        color: p.color,
+        id: p.id
+      }))
+    })
   }
-
-  const load = (key) => {
-    return JSON.parse(localStorage.getItem(key))
+  
+  if (localStorage.getItem('taskList')) {
+    let tl = JSON.parse(localStorage.getItem('taskList'))
+    tl.all.forEach(function(t) {
+      taskList.add(new Task( { 
+        name: t.name,
+        desc: t.desc,
+        dueDate: new Date(t.dueDate),
+        priority: t.priority,
+        project: t.project,
+        id: t.id
+      }))
+  
+      // If task is added to a project, must do these things:
+      if (t.project) {
+        projectList.all.forEach(function(proj) {
+          if (proj.id == t.project) {
+            // Add task to project if one is selected
+            proj.tasks.add(t)
+          }
+        })
+      }
+    })
   }
-
-  return { save, load }
 }
 
-export default Database
+export default LoadData

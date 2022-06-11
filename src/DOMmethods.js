@@ -175,9 +175,9 @@ const DOMmethods = () => {
     const form       = newElement('form')
 
     // Form element labels
-    const nameLabel         = newElement('label')
-    const descLabel         = newElement('label')
-    const colorLabel        = newElement('label')
+    const nameLabel  = newElement('label')
+    const descLabel  = newElement('label')
+    const colorLabel = newElement('label')
 
     // Associate labels with inputs
     nameLabel.setAttribute('for', 'name')
@@ -187,11 +187,11 @@ const DOMmethods = () => {
     colorLabel.textContent  = 'Color (used to identify the project): '
 
     // Create inputs
-    const name          = newElement('input')
-    const desc          = newElement('textarea')
-    const color         = newElement('input')
+    const name             = newElement('input')
+    const desc             = newElement('textarea')
+    const color            = newElement('input')
     const projectSubmitBtn = newElement('button') 
-    const formCloseBtn  = newElement('span', 'close')
+    const formCloseBtn     = newElement('span', 'close')
 
     // Misc. attributes for each input
     name.type        = 'text'
@@ -251,7 +251,51 @@ const DOMmethods = () => {
     }
   }
 
-  const showForm = (form, projList = []) => {
+  const buildTaskDetailsModal = () => {
+    const modal      = newElement('div', 'modal')
+    const detailsDiv = newElement('div', 'modal-content', 'task-details-container')
+
+    // Divs to contain each task item
+    const nameDiv     = newElement('div')
+    const descDiv     = newElement('div')
+    const dueDateDiv  = newElement('div')
+    const priorityDiv = newElement('div')
+    const projectDiv  = newElement('div')
+
+    // Buttons
+    const editTaskBtn   = newElement('button')
+    const formCloseBtn  = newElement('span', 'close')
+    formCloseBtn.textContent = '\u2715'
+
+    editTaskBtn.type        = 'button'
+    editTaskBtn.textContent = 'Edit'
+
+    detailsDiv.append(
+      nameDiv,
+      descDiv,
+      dueDateDiv,
+      priorityDiv,
+      projectDiv,
+      editTaskBtn
+    )
+
+    modal.append(detailsDiv)
+
+    return {
+      modal,
+      nameDiv,
+      descDiv,
+      dueDateDiv,
+      priorityDiv,
+      projectDiv,
+      context: 'taskDetails',
+      closeBtn: formCloseBtn,
+    }
+  }
+
+  const showForm = (form, projList = [], task) => {
+
+    // Task input form
     if (form.context === 'task') {
       projList.all.forEach((proj) => {
         form.project.append(
@@ -261,8 +305,37 @@ const DOMmethods = () => {
       form.project.append(newOption('', 'None'))
     }
 
+    // Project input form
     if (form.context === 'project') {
       form.color.value = randomColor()
+    }
+
+    // Task details modal
+    if (form.context === 'taskDetails') {
+
+      form.projectDiv.innerHTML = '<b>Project: </b>'
+
+      projList.all.forEach((proj) => {
+        if (task.project == proj.id) {
+          form.projectDiv.innerHTML = `<b>Project:</b> <span style="text-decoration: underline ${proj.color} 3px;">${proj.name}</span>`
+        }
+      })
+
+      let pr = 
+      task.priority === 'high' ? 'High ‼️' :
+      task.priority === 'med' ? 'Medium ⚠️' :
+      task.priority === 'low' ? 'Low 🟢' : ' '
+
+      // This is a mess
+      form.nameDiv.innerHTML = '<b>Name:</b> ' + task.name
+      form.nameDiv.append(form.closeBtn)
+
+      form.descDiv.innerHTML = '<b>Description:</b> <br>' + task.desc
+      form.descDiv.style.whiteSpace = 'pre-line'
+
+      form.dueDateDiv.innerHTML = '<b>Due date:</b> ' + format(task.dueDate, 'MMMM dd, yyyy')
+
+      form.priorityDiv.innerHTML = '<b>Priority:</b> ' + pr
     }
 
     form.modal.style.display = 'block'
@@ -279,14 +352,33 @@ const DOMmethods = () => {
   }
 
   const _createTask = (t, projects) => {
-    const taskDiv = newElement('div')
-    const taskRadio = newElement('input')
-    taskRadio.setAttribute('type', 'checkbox')
-    const task = newElement('div')
-    task.textContent = t.name
-    const taskDate = newElement('div')
-    taskDate.classList.add('task-due-date')
+    const taskDiv      = newElement('div')
+    const task         = newElement('div', 'task-name')
+    const taskDate     = newElement('div')
+    const taskRadio    = newElement('input')
+
+    let pr = 
+      t.priority === 'high' ? ' ‼️' :
+      t.priority === 'med' ? ' ⚠️' :
+      t.priority === 'low' ? ' 🟢' : ' '
+
+    task.textContent     = t.name + pr
     taskDate.textContent = format(t.dueDate, 'MMMM dd, yyyy')
+
+    task.dataset.taskId = t.id
+
+    taskRadio.setAttribute('type', 'checkbox')
+    taskDate.classList.add('task-due-date')
+
+    // If the task is in a project, color the left border the correct color, add name of project to task display
+    if (t.project) {
+      projects.all.forEach(function(proj) {
+        if (proj.id == t.project) {
+          taskDiv.style.borderLeft = `3px solid ${proj.color}`
+          //taskProject.textContent = proj.name
+        }
+      })
+    }
 
     taskDiv.append(
       taskRadio,
@@ -294,19 +386,11 @@ const DOMmethods = () => {
       taskDate
     )
 
-    // If the task is in a project, color the left border the correct color
-    if (t.project) {
-      projects.all.forEach(function(proj) {
-        if (proj.id == t.project) {
-          taskDiv.style.borderLeft = `2px solid ${proj.color}`
-        }
-      })
-    }
     return taskDiv
   }
 
   const _createProject = (p) => {
-    const projLi = newElement('li', 'extra-chevron')
+    const projLi     = newElement('li', 'extra-chevron')
     const projLiSpan = newElement('div')
 
     projLi.dataset.isProjParent = '1'
@@ -321,7 +405,7 @@ const DOMmethods = () => {
   }
 
   const _createProjectTask = (task, p) => {
-    const taskLi = newElement('li')
+    const taskLi     = newElement('li')
     const taskLiSpan = newElement('div')
 
     taskLi.dataset.isProjChild = '1'
@@ -385,6 +469,7 @@ const DOMmethods = () => {
   return { 
     buildTaskFormModal, 
     buildProjectFormModal,
+    buildTaskDetailsModal,
     showForm,
     closeAndClearForm,
     refreshTasks, 

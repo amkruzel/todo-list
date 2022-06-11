@@ -7,6 +7,7 @@ class Task {
     this.desc     = obj.desc
     this.priority = obj.priority
     this.project  = obj.project
+    this.id       = obj.id
   }
 }
 
