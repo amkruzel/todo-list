@@ -26,6 +26,13 @@ class TaskList {
     }
   }
 
+  delete(task) {
+    this.all = this.all.filter(t => t.id != task.id)
+    this.visible = this.all
+    this.amtAll -= 1
+    this.amtVisible -= 1
+  }
+
   /*
   sortType is one of:
   - 'dateAsc'

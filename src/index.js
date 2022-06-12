@@ -128,14 +128,26 @@ taskDetails.closeBtn.addEventListener('click', function() {
 
 // Open task details modal when task name is clicked
 main.addEventListener('click', function(e) {
-  if (!e.target.classList.contains('task-name')) return
-  
-  taskList.all.forEach(function(t) {
-    if (t.id == e.target.dataset.taskId) {
-      console.log(t, e.target)
-      DOM.showForm(taskDetails, projectList, t)
-    }
-  })
+  if (!(e.target.classList.contains('task-name') || e.target.checked)) return
+
+  if (e.target.classList.contains('task-name')) {
+    taskList.all.forEach(function(t) {
+      if (t.id == e.target.dataset.taskId) {
+        DOM.showForm(taskDetails, projectList, t)
+      }
+    })
+  }
+
+  if (e.target.checked) {
+    taskList.all.forEach(function(t) {
+      if (t.id == e.target.nextSibling.dataset.taskId) {
+        taskList.delete(t)
+        SaveData(taskList, projectList)
+        //DOM.refreshProjects(ulProjects, projectList)
+        //DOM.refreshTasks(main, taskList, projectList)
+      }
+    })
+  }
 })
 
 // New task submit 
