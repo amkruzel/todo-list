@@ -174,8 +174,7 @@ taskForm.submitBtn.addEventListener('click', function() {
   // Update sidebar
   DOM.refreshProjects(ulProjects, projectList)
   
-  DOM.closeAndClearForm(taskForm)
-  Page.isTaskFormOpen = false
+  closeForm(taskForm)
 
   // return if new task does not show
   // also show msg to user
@@ -201,11 +200,7 @@ projectForm.submitBtn.addEventListener('click', function() {
   }
 
   projectList.add(new Project(results))
-
-  DOM.closeAndClearForm(projectForm)
-
-  Page.isProjectFormOpen = false
-
+  closeForm(projectForm)
   DOM.refreshProjects(ulProjects, projectList)
   SaveData(taskList, projectList)
 })

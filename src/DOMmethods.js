@@ -1,26 +1,28 @@
-import { newElement, newOption, getDateTodayStr, randomColor } from './helperFunctions'
+import { 
+  newElement, 
+  newOption, 
+  getDateTodayStr, 
+  randomColor 
+} from './helperFunctions'
 import format from 'date-fns/format'
 
-/*////////////////////// 
-
-Description:
-  Build form to get new task from user. It is built as a modal window
-
-Returns:
-  modal     - the modal div, which contains the form
-  name      - task name input
-  desc      - task description input
-  dueDate   - task due date input
-  project   - task project input
-  closeBtn  - the button that can be clicked to close the form
-  submitBtn - the button that can be clicked to submit the form
-  priority  - object containing the three priority inputs:
-    high, med, low
-
-//////////////////////*/
 const DOMmethods = () => {
-  const buildTaskFormModal = () => {
+  /*////////////////////// 
+  Description:
+    Build form to get new task from user. It is built as a modal window
 
+  Returns:
+    modal     - the modal div, which contains the form
+    name      - task name input
+    desc      - task description input
+    dueDate   - task due date input
+    project   - task project input
+    closeBtn  - the button that can be clicked to close the form
+    submitBtn - the button that can be clicked to submit the form
+    priority  - object containing the three priority inputs:
+      high, med, low
+  //////////////////////*/
+  const buildTaskFormModal = () => {
     const modal   = newElement('div', 'modal')
     const formDiv = newElement('div', 'new-task-form', 'modal-content')
     const form    = newElement('form')
@@ -155,7 +157,6 @@ const DOMmethods = () => {
   }
 
   /*////////////////////// 
-
   Description:
     Build form to get new project from user. It is built as a modal window
 
@@ -166,9 +167,7 @@ const DOMmethods = () => {
     color     - color used to distinguish the project
     closeBtn  - the button that can be clicked to close the form
     submitBtn - the button that can be clicked to submit the form
-
   //////////////////////*/
-
   const buildProjectFormModal = () => {
     const modal      = newElement('div', 'modal')
     const projectDiv = newElement('div', 'new-proj-form', 'modal-content')
@@ -184,7 +183,7 @@ const DOMmethods = () => {
     descLabel.setAttribute('for', 'desc')
     colorLabel.setAttribute('for', 'color')
 
-    colorLabel.textContent  = 'Color (used to identify the project): '
+    colorLabel.textContent = 'Color (used to identify the project): '
 
     // Create inputs
     const name             = newElement('input')
@@ -204,8 +203,8 @@ const DOMmethods = () => {
     desc.placeholder = 'Description...'
     desc.id          = 'desc'
 
-    color.type  = 'color'
-    color.id    = 'color'
+    color.type = 'color'
+    color.id   = 'color'
 
     projectSubmitBtn.type        = 'button'
     projectSubmitBtn.textContent = 'Add'
@@ -214,9 +213,9 @@ const DOMmethods = () => {
     formCloseBtn.textContent = '\u2715'
 
     // Input containers
-    const nameContainer    = newElement('div')
-    const descContainer    = newElement('div')
-    const colorContainer   = newElement('div', 'color-container')
+    const nameContainer  = newElement('div')
+    const descContainer  = newElement('div')
+    const colorContainer = newElement('div', 'color-container')
 
     // Need an additional one for color to style it
     const colorSelectorcontainer = newElement('span')
@@ -263,8 +262,8 @@ const DOMmethods = () => {
     const projectDiv  = newElement('div')
 
     // Buttons
-    const editTaskBtn   = newElement('button')
-    const formCloseBtn  = newElement('span', 'close')
+    const editTaskBtn  = newElement('button')
+    const formCloseBtn = newElement('span', 'close')
     formCloseBtn.textContent = '\u2715'
 
     editTaskBtn.type        = 'button'
@@ -297,18 +296,17 @@ const DOMmethods = () => {
 
     // Task input form
     if (form.context === 'task') {
+      // First item is 'None' so that is the default
+      form.project.append(newOption('', 'None'))
       projList.all.forEach((proj) => {
         form.project.append(
           newOption(proj.id, proj.name)
         )
       })
-      form.project.append(newOption('', 'None'))
     }
 
     // Project input form
-    if (form.context === 'project') {
-      form.color.value = randomColor()
-    }
+    if (form.context === 'project') form.color.value = randomColor()
 
     // Task details modal
     if (form.context === 'taskDetails') {
@@ -322,9 +320,9 @@ const DOMmethods = () => {
       })
 
       let pr = 
-      task.priority === 'high' ? 'High ‼️' :
-      task.priority === 'med' ? 'Medium ⚠️' :
-      task.priority === 'low' ? 'Low 🟢' : ' '
+        task.priority === 'high' ? 'High ‼️' :
+        task.priority === 'med' ? 'Medium ⚠️' :
+        task.priority === 'low' ? 'Low 🟢' : ' '
 
       // This is a mess
       form.nameDiv.innerHTML = '<b>Name:</b> ' + task.name
@@ -347,9 +345,7 @@ const DOMmethods = () => {
     })
   }
 
-  const _closeForm = (form) => {
-    form.style.display = 'none'
-  }
+  const _closeForm = form => form.style.display = 'none'
 
   const _createTask = (t, projects) => {
     const taskDiv      = newElement('div')
@@ -389,34 +385,32 @@ const DOMmethods = () => {
     return taskDiv
   }
 
-  const _createProject = (p) => {
-    const projLi     = newElement('li', 'extra-chevron')
-    const projLiSpan = newElement('div')
+  const _createSidebarItem = (p, t = '') => {
+    let isTask = t ? true : false
 
-    projLi.dataset.isProjParent = '1'
-    projLi.dataset.projName = p.name
-    projLiSpan.innerHTML = p.icon
+    const itemLi  = newElement('li')
+    const itemDiv = newElement('div')
 
-    projLi.textContent = p.name
-    projLi.prepend(projLiSpan)
-    projLi.prepend(p.chevronDown)
+    if (isTask) {
+      itemLi.dataset.projParent = t.project
+      itemLi.dataset.isProjChild = '1'
+    } else {
+      itemLi.dataset.projName = p.name
+      itemLi.dataset.isProjParent = '1'
+      itemLi.classList.add('extra-chevron')
+    }
+    itemDiv.innerHTML = p.icon
 
-    return projLi
+    itemLi.textContent = isTask ? t.name : p.name
+    itemLi.prepend(itemDiv)
+    if (!isTask) itemLi.prepend(p.chevronDown)
+
+    return itemLi
   }
 
-  const _createProjectTask = (task, p) => {
-    const taskLi     = newElement('li')
-    const taskLiSpan = newElement('div')
+  const _createProject = p => _createSidebarItem(p)
 
-    taskLi.dataset.isProjChild = '1'
-    taskLi.dataset.projParent = task.project
-    taskLiSpan.innerHTML = p.icon
-
-    taskLi.textContent = task.name
-    taskLi.prepend(taskLiSpan)
-
-    return taskLi
-  }
+  const _createProjectTask = (task, p) => _createSidebarItem(p, task)
 
   const closeAndClearForm = (form) => {
     _closeForm(form.modal)
@@ -432,11 +426,7 @@ const DOMmethods = () => {
       form.project.replaceChildren()
     } 
     if (form.context === 'project') {
-      _clearForm(
-        form.name,
-        form.desc,
-        form.color
-      )
+      _clearForm(form.name, form.desc, form.color)
     }
   }
 
