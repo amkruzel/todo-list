@@ -176,18 +176,11 @@ taskForm.submitBtn.addEventListener('click', function() {
   let newTask = new Task(results)
   taskList.add(newTask)
 
-  // If task is added to a project, must do these things:
-  if (taskForm.project.value) {
-    projectList.all.forEach(function(proj) {
-      if (proj.id == newTask.project) {
-        // Add task to project if one is selected
-        proj.tasks.add(newTask)
-      }
-    })
+  // If task is added to a project, must do this:
+  if (taskForm.project.value) projectList.addTaskToProject(newTask)
 
-    // Update sidebar
-    DOM.refreshProjects(ulProjects, projectList)
-  }
+  // Update sidebar
+  DOM.refreshProjects(ulProjects, projectList)
   
   DOM.closeAndClearForm(taskForm)
   Page.isTaskFormOpen = false

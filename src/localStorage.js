@@ -28,15 +28,8 @@ const LoadData = (taskList, projectList) => {
         id: t.id
       }))
   
-      // If task is added to a project, must do these things:
-      if (t.project) {
-        projectList.all.forEach(function(proj) {
-          if (proj.id == t.project) {
-            // Add task to project if one is selected
-            proj.tasks.add(t)
-          }
-        })
-      }
+      // If task is added to a project, must do these this:
+      if (t.project) projectList.addTaskToProject(t) 
     })
   }
 }
