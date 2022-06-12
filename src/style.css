@@ -195,10 +195,16 @@ li[data-is-proj-child='1'] {
 
 /* Dropdown filter */
 
+.dropdown {
+  position: absolute;
+  top: 85px;
+}
+
 .dropdown-content {
   display: none;
   position: absolute;
-  top: 115px;
+  top: 32px;
+  right: 5px;
   background-color: #f1f1f1;
   min-width: 80px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
