@@ -102,36 +102,28 @@ mainFilter.addEventListener('click', function(e) {
 
 // MODALS //
 
+function closeForm(f) {
+  DOM.closeAndClearForm(f)
+  Page.isTaskFormOpen    = false
+  Page.isProjectFormOpen = false
+}
+
 // Close modals by clicking outside of them
 window.onclick = function(event) {
-  if (event.target === taskForm.modal) {
-    DOM.closeAndClearForm(taskForm)
-    Page.isTaskFormOpen = false
-  }
-
-  if (event.target === projectForm.modal) {
-    DOM.closeAndClearForm(projectForm)
-    Page.isProjectFormOpen = false
-  }
-
-  if (event.target === taskDetails.modal) {
-    DOM.closeAndClearForm(taskDetails)
-  }
+  if (event.target === taskForm.modal) closeForm(taskForm)
+  if (event.target === projectForm.modal) closeForm(projectForm)
+  if (event.target === taskDetails.modal) closeForm(taskDetails)
 }
 
 // Close modals by clicking 'x'
-taskForm.closeBtn.addEventListener('click', function() {
-  DOM.closeAndClearForm(taskForm)
-  Page.isTaskFormOpen = false
+taskForm.closeBtn.addEventListener('click', function() { 
+  closeForm(taskForm) 
 })
-
-projectForm.closeBtn.addEventListener('click', function() {
-  DOM.closeAndClearForm(projectForm)
-  Page.isProjectFormOpen = false
+projectForm.closeBtn.addEventListener('click', function() { 
+  closeForm(projectForm) 
 })
-
 taskDetails.closeBtn.addEventListener('click', function() {
-  DOM.closeAndClearForm(taskDetails)
+  closeForm(taskDetails)
 })
 
 // Open task details modal when task name is clicked
