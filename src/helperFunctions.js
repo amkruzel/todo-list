@@ -2,7 +2,7 @@ import { format } from "date-fns"
 
 function newElement(type, ...classes) {
   let el = document.createElement(type)
-  classes.forEach((cl) => {
+  classes.forEach(cl => {
     el.classList.add(cl)
   })
   return el

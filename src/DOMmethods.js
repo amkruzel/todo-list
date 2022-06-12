@@ -262,12 +262,8 @@ const DOMmethods = () => {
     const projectDiv  = newElement('div')
 
     // Buttons
-    const editTaskBtn  = newElement('button')
     const formCloseBtn = newElement('span', 'close')
     formCloseBtn.textContent = '\u2715'
-
-    editTaskBtn.type        = 'button'
-    editTaskBtn.textContent = 'Edit'
 
     detailsDiv.append(
       nameDiv,
@@ -275,7 +271,6 @@ const DOMmethods = () => {
       dueDateDiv,
       priorityDiv,
       projectDiv,
-      editTaskBtn
     )
 
     modal.append(detailsDiv)
@@ -298,7 +293,7 @@ const DOMmethods = () => {
     if (form.context === 'task') {
       // First item is 'None' so that is the default
       form.project.append(newOption('', 'None'))
-      projList.all.forEach((proj) => {
+      projList.all.forEach(proj => {
         form.project.append(
           newOption(proj.id, proj.name)
         )
@@ -313,7 +308,7 @@ const DOMmethods = () => {
 
       form.projectDiv.innerHTML = '<b>Project: </b>'
 
-      projList.all.forEach((proj) => {
+      projList.all.forEach(proj => {
         if (task.project == proj.id) {
           form.projectDiv.innerHTML = `<b>Project:</b> <span style="text-decoration: underline ${proj.color} 3px;">${proj.name}</span>`
         }
