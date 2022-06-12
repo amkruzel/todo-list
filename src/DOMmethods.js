@@ -291,6 +291,8 @@ const DOMmethods = () => {
 
     // Task input form
     if (form.context === 'task') {
+      console.log(form.priority)
+      
       // First item is 'None' so that is the default
       form.project.append(newOption('', 'None'))
       projList.all.forEach(proj => {
@@ -298,6 +300,10 @@ const DOMmethods = () => {
           newOption(proj.id, proj.name)
         )
       })
+
+      form.priority.high.checked = false
+      form.priority.med.checked  = false
+      form.priority.low.checked  = false
     }
 
     // Project input form

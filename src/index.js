@@ -126,10 +126,9 @@ taskDetails.closeBtn.addEventListener('click', function() {
   closeForm(taskDetails)
 })
 
-// Open task details modal when task name is clicked
+// Main event listeners
 main.addEventListener('click', function(e) {
-  if (!(e.target.classList.contains('task-name') || e.target.checked)) return
-
+  // Open task details modal
   if (e.target.classList.contains('task-name')) {
     taskList.all.forEach(function(t) {
       if (t.id == e.target.dataset.taskId) {
@@ -137,14 +136,12 @@ main.addEventListener('click', function(e) {
       }
     })
   }
-
+  // Delete task when it is checked
   if (e.target.checked) {
     taskList.all.forEach(function(t) {
       if (t.id == e.target.nextSibling.dataset.taskId) {
         taskList.delete(t)
         SaveData(taskList, projectList)
-        //DOM.refreshProjects(ulProjects, projectList)
-        //DOM.refreshTasks(main, taskList, projectList)
       }
     })
   }
