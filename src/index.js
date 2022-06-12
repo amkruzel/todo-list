@@ -5,20 +5,31 @@ import buildSidebar from './buildSidebar'
 import buildMain    from './buildMain'
 
 import DOMmethods from './DOMmethods'
-import LoadData   from './localStorage'
 
-import Task        from './classes/task'
-import TaskList    from './classes/taskList'
-import Project     from './classes/project'
-import ProjectList from './classes/projectList'
-
+import Task           from './classes/task'
+import TaskList       from './classes/taskList'
+import Project        from './classes/project'
+import ProjectList    from './classes/projectList'
 import PageProperties from './classes/PageProperties'
+
+import { LoadData, SaveData }   from './localStorage'
 
 const Content = document.querySelector('.content')
 
-const { header, newTaskBtn, newProjectBtn, clearStorageBtn }  = buildHeader()
-const { sidebar, ulProjects } = buildSidebar()
-const { main, mainFilter }    = buildMain()
+const { 
+  header, 
+  newTaskBtn, 
+  newProjectBtn, 
+  clearStorageBtn 
+} = buildHeader()
+const { 
+  sidebar, 
+  ulProjects 
+} = buildSidebar()
+const { 
+  main, 
+  mainFilter 
+} = buildMain()
 
 
 const DOM         = DOMmethods()
@@ -30,8 +41,10 @@ const Page        = new PageProperties()
 const taskList    = new TaskList()
 const projectList = new ProjectList()
 
+// If there is data on localStorage, it will be loaded
 LoadData(taskList, projectList)
 
+// Put everything in the HTML
 Content.append(
   header, 
   sidebar, 
@@ -41,12 +54,15 @@ Content.append(
   taskDetails.modal
 )
 
+// Refresh tasks and projects - this will do nothing if there is nothing in localSorage
 DOM.refreshTasks(main, taskList, projectList)
 DOM.refreshProjects(ulProjects, projectList)
 
-//////////////////
-// Event listeners 
-//////////////////
+/////////////////////
+// Event listeners // 
+/////////////////////
+
+// HEADER //
 
 header.addEventListener('click', function(e) {
   if (e.target === newTaskBtn) {
@@ -73,6 +89,9 @@ header.addEventListener('click', function(e) {
   }
 })
 
+// MAIN //
+
+// Filter tasks
 mainFilter.addEventListener('click', function(e) {
   DOM.refreshTasks(
     main, 
@@ -81,20 +100,9 @@ mainFilter.addEventListener('click', function(e) {
     e.target.dataset.filterType)
 })
 
-taskForm.closeBtn.addEventListener('click', function() {
-  DOM.closeAndClearForm(taskForm)
-  Page.isTaskFormOpen = false
-})
+// MODALS //
 
-projectForm.closeBtn.addEventListener('click', function() {
-  DOM.closeAndClearForm(projectForm)
-  Page.isProjectFormOpen = false
-})
-
-taskDetails.closeBtn.addEventListener('click', function() {
-  DOM.closeAndClearForm(taskDetails)
-})
-
+// Close modals by clicking outside of them
 window.onclick = function(event) {
   if (event.target === taskForm.modal) {
     DOM.closeAndClearForm(taskForm)
@@ -111,6 +119,22 @@ window.onclick = function(event) {
   }
 }
 
+// Close modals by clicking 'x'
+taskForm.closeBtn.addEventListener('click', function() {
+  DOM.closeAndClearForm(taskForm)
+  Page.isTaskFormOpen = false
+})
+
+projectForm.closeBtn.addEventListener('click', function() {
+  DOM.closeAndClearForm(projectForm)
+  Page.isProjectFormOpen = false
+})
+
+taskDetails.closeBtn.addEventListener('click', function() {
+  DOM.closeAndClearForm(taskDetails)
+})
+
+// Open task details modal when task name is clicked
 main.addEventListener('click', function(e) {
   if (!e.target.classList.contains('task-name')) return
   
@@ -122,6 +146,7 @@ main.addEventListener('click', function(e) {
   })
 })
 
+// New task submit 
 taskForm.submitBtn.addEventListener('click', function() {
   
   let selectedPriority = 
@@ -173,11 +198,10 @@ taskForm.submitBtn.addEventListener('click', function() {
   // push new task to tasklist visible
   DOM.refreshTasks(main, taskList, projectList)
   
-  localStorage.setItem('projectList', JSON.stringify(projectList))
-  localStorage.setItem('taskList', JSON.stringify(taskList))
-  localStorage.setItem('Page', JSON.stringify(Page))
+  SaveData(taskList, projectList)
 })
 
+// New project submit
 projectForm.submitBtn.addEventListener('click', function() {
   if (!projectForm.name.value) {
     alert('A project name is required.')
@@ -198,8 +222,7 @@ projectForm.submitBtn.addEventListener('click', function() {
   Page.isProjectFormOpen = false
 
   DOM.refreshProjects(ulProjects, projectList)
-  localStorage.setItem('projectList', JSON.stringify(projectList))
-  localStorage.setItem('Page', JSON.stringify(Page))
+  SaveData(taskList, projectList)
 })
 
 // This and the following function allow the priority radio buttons to be de-selected

@@ -41,4 +41,10 @@ const LoadData = (taskList, projectList) => {
   }
 }
 
-export default LoadData
+// Assumes that all data should always be saved together
+const SaveData = (tasks, projects) => {
+  localStorage.setItem('taskList', JSON.stringify(tasks))
+  localStorage.setItem('projectList', JSON.stringify(projects))
+}
+
+export { LoadData, SaveData }
