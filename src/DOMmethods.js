@@ -3,8 +3,6 @@ import {
   newOption, 
   getDateTodayStr, 
   randomColor, 
-  strikeThrough,
-  unstrikeThrough
 } from './helperFunctions'
 import format from 'date-fns/format'
 
@@ -382,13 +380,13 @@ const DOMmethods = () => {
     if (t.isComplete) {
       task.innerHTML     = `<s>${task.textContent}</s>`
       taskDate.innerHTML = `<s>${taskDate.textContent}</s>`
-      taskRadio.checked    = true
+      taskRadio.checked  = true
     }
 
     // If the task is being unchecked, undo strikethrough
     if (!t.isComplete) {
-      task.textContent     = unstrikeThrough(task.textContent)
-      taskDate.textContent = unstrikeThrough(taskDate.textContent)
+      task.textContent     = task.innerHTML.replace(/<>/, '')
+      taskDate.textContent = taskDate.innerHTML.replace(/<>/, '')
       taskRadio.checked    = false
     }
 
