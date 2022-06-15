@@ -136,14 +136,30 @@ main.addEventListener('click', function(e) {
       }
     })
   }
-  // Delete task when it is checked
-  if (e.target.checked) {
-    taskList.all.forEach(function(t) {
-      if (t.id == e.target.nextSibling.dataset.taskId) {
-        taskList.delete(t)
-        SaveData(taskList, projectList)
-      }
-    })
+  if (e.target.type === 'checkbox') {
+
+    const refresh = function() {
+      SaveData(taskList, projectList)
+      DOM.refreshProjects(ulProjects, projectList)
+      DOM.refreshTasks(main, taskList, projectList)
+    }
+
+    // Mark task as complete when it is checked
+    if (e.target.checked) {
+      taskList.all.forEach(function(t) {
+        if (t.id == e.target.nextSibling.dataset.taskId) {
+          t.isComplete = true
+          refresh()
+        }
+      })
+    } else {
+      taskList.all.forEach(function(t) {
+        if (t.id == e.target.nextSibling.dataset.taskId) {
+          t.isComplete = false
+          refresh()
+        }
+      })
+    }
   }
 })
 

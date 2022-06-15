@@ -52,4 +52,15 @@ function randomColor() {
   return `${hslToHex(h, s, l)}`
 }
 
-export { newElement, newOption, newImg, newProjectIcon, getDateTodayStr, randomColor }
+function strikeThrough(text) {
+  return text
+    .split('')
+    .map(char => char + '\u0336')
+    .join('')
+}
+
+function unstrikeThrough(text) {
+  return text.replace('\u0336', '')
+}
+
+export { newElement, newOption, newImg, newProjectIcon, getDateTodayStr, randomColor, strikeThrough, unstrikeThrough }

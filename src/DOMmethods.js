@@ -2,7 +2,9 @@ import {
   newElement, 
   newOption, 
   getDateTodayStr, 
-  randomColor 
+  randomColor, 
+  strikeThrough,
+  unstrikeThrough
 } from './helperFunctions'
 import format from 'date-fns/format'
 
@@ -300,7 +302,6 @@ const DOMmethods = () => {
           newOption(proj.id, proj.name)
         )
       })
-
       form.priority.high.checked = false
       form.priority.med.checked  = false
       form.priority.low.checked  = false
@@ -377,6 +378,20 @@ const DOMmethods = () => {
       })
     }
 
+    // If the task has been marked completed, strikethrough
+    if (t.isComplete) {
+      task.innerHTML     = `<s>${task.textContent}</s>`
+      taskDate.innerHTML = `<s>${taskDate.textContent}</s>`
+      taskRadio.checked    = true
+    }
+
+    // If the task is being unchecked, undo strikethrough
+    if (!t.isComplete) {
+      task.textContent     = unstrikeThrough(task.textContent)
+      taskDate.textContent = unstrikeThrough(taskDate.textContent)
+      taskRadio.checked    = false
+    }
+
     taskDiv.append(
       taskRadio,
       task,
@@ -451,6 +466,7 @@ const DOMmethods = () => {
     projectList.all.forEach(function(proj) {
       if (proj.tasks.all.length > 0) {
         proj.tasks.all.forEach(function(t) {
+          if (t.isComplete) return
           header.after(_createProjectTask(t, proj))
         })
       }
