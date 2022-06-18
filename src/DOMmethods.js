@@ -371,7 +371,6 @@ const DOMmethods = () => {
       projects.all.forEach(function(proj) {
         if (proj.id == t.project) {
           taskDiv.style.borderLeft = `3px solid ${proj.color}`
-          //taskProject.textContent = proj.name
         }
       })
     }

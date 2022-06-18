@@ -25,10 +25,10 @@ const LoadData = (taskList, projectList) => {
         dueDate: new Date(t.dueDate),
         priority: t.priority,
         project: t.project,
-        id: t.id
-      }))
+        id: t.id,
+      }, t.isComplete))
   
-      // If task is added to a project, must do these this:
+      // If task is added to a project, must do this:
       if (t.project) projectList.addTaskToProject(t) 
     })
   }

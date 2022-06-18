@@ -12,7 +12,7 @@ import Project        from './classes/project'
 import ProjectList    from './classes/projectList'
 import PageProperties from './classes/PageProperties'
 
-import { LoadData, SaveData }   from './localStorage'
+import { LoadData, SaveData } from './localStorage'
 
 const Content = document.querySelector('.content')
 
@@ -140,26 +140,22 @@ main.addEventListener('click', function(e) {
 
     const refresh = function() {
       SaveData(taskList, projectList)
-      DOM.refreshProjects(ulProjects, projectList)
       DOM.refreshTasks(main, taskList, projectList)
+      DOM.refreshProjects(ulProjects, projectList)
     }
 
     // Mark task as complete when it is checked
-    if (e.target.checked) {
-      taskList.all.forEach(function(t) {
-        if (t.id == e.target.nextSibling.dataset.taskId) {
-          t.isComplete = true
-          refresh()
+    taskList.all.forEach(function(t) {
+      if (t.id == e.target.nextSibling.dataset.taskId) {
+        let p = projectList.getProjByID(t.project)
+        t.isComplete = e.target.checked ? true : false
+        if (p != '') {
+          if (t.isComplete) p.markTaskComplete(t.id)
+          if (!t.isComplete) p.markTaskIncomplete(t.id)
         }
-      })
-    } else {
-      taskList.all.forEach(function(t) {
-        if (t.id == e.target.nextSibling.dataset.taskId) {
-          t.isComplete = false
-          refresh()
-        }
-      })
-    }
+        refresh()
+      }
+    })
   }
 })
 

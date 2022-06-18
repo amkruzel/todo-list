@@ -235,6 +235,7 @@ li[data-is-proj-child='1'] {
   font-size: 14px;
   grid-template: 24px 24px / 24px calc(100% - 84px) 60px;
   padding-top: 5px;
+  border-left: 3px solid white;
 }
 
 .main-container > div:not(.main-header-container):not(:last-child) {
@@ -254,7 +255,6 @@ li[data-is-proj-child='1'] {
 /* Checkbox styling */
 
 input[type='checkbox'] {
-  appearance: none;
   width: 18px;
   height: 18px;
   justify-self: center;
@@ -276,26 +276,6 @@ input[type='checkbox'].recurring {
 
 input[type='checkbox']:hover {
   cursor: pointer;
-}
-
-input[type='checkbox']::before {
-  content: '';
-  width: 10px;
-  height: 10px;
-  transform: scale(0);
-  transition: 120ms transform ease-in-out;
-  box-shadow: inset 1em 1em green;
-  outline: .13rem solid gray !important;
-  outline-offset: 10px;
-  transform-origin: bottom left;
-  clip-path: polygon(
-    14% 44%, 0 65%, 
-    50% 100%, 100% 16%, 
-    80% 0%, 43% 62%);
-}
-
-input[type='checkbox']:checked::before {
-  transform: scale(1);
 }
 
 /*////////////////

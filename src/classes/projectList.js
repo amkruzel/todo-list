@@ -15,6 +15,12 @@ class ProjectList {
     })
   }
 
+  getProjByID(id) {
+    let p = ''
+    this.all.forEach(function(proj) { if (proj.id == id) p = proj })
+    return p
+  }
+
   #init() {
     this.all = []
   }

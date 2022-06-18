@@ -17,6 +17,18 @@ class Project {
     this.#init()
   }
 
+  markTaskComplete(taskID) {
+    this.tasks.all.forEach(function(t) { 
+      if (t.id == taskID) t.isComplete = true 
+    })
+  }
+
+  markTaskIncomplete(taskID) {
+    this.tasks.all.forEach(function(t) {
+      if (t.id == taskID) t.isComplete = false
+    })
+  }
+
   #init() {
     this.tasks = new TaskList()
   }
