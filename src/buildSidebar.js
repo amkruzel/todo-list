@@ -1,5 +1,6 @@
 import { newElement, newImg } from './helperFunctions'
 
+import allSvg          from './media/ballot-outline.svg'
 import todaySvg        from './media/calendar-alert.svg'
 import upcomingSvg     from './media/calendar-month-outline.svg'
 import filterSvg       from './media/image-filter-none.svg'
@@ -29,6 +30,7 @@ const buildSidebar = () => {
   */
 
   // Icons
+  const allIcon          = newImg(allSvg)
   const todayIcon        = newImg(todaySvg)
   const upcomingIcon     = newImg(upcomingSvg)
   const filterIcon       = newImg(filterSvg)
@@ -50,7 +52,8 @@ const buildSidebar = () => {
   const ulProjects  = newElement('ul')
 
   // Individual list items
-  const mainToday             = newElement('li', 'selected-li')
+  const mainAll               = newElement('li', 'selected-li')
+  const mainToday             = newElement('li')
   const mainUpcoming          = newElement('li')
   const mainFilter            = newElement('li')
   const favoritesHeader       = newElement('li', 'list-header')
@@ -58,14 +61,13 @@ const buildSidebar = () => {
   const favoritesRecurring    = newElement('li')
   const favoritesCalendar     = newElement('li')
   const projectsHeader        = newElement('li', 'list-header', 'proj-header')
-  const projectsPersonal      = newElement('li')
-  const projectsWork          = newElement('li')
 
-  // Project sub-items
-  const personalHome   = newElement('li')
-  const personalFamily = newElement('li')
+  // Add dataset properties
+  mainAll.dataset.filter = 'all'
+  mainToday.dataset.filter = 'today'
 
   // Add text to each item
+  mainAll.textContent               = 'All'
   mainToday.textContent             = 'Today'
   mainUpcoming.textContent          = 'Upcoming'
   mainFilter.textContent            = 'Filters & Labels'
@@ -74,14 +76,9 @@ const buildSidebar = () => {
   favoritesRecurring.textContent    = 'Recurring'
   favoritesCalendar.textContent     = 'Calendar'
   projectsHeader.textContent        = 'Projects'
-  projectsPersonal.textContent      = 'Personal'
-  projectsWork.textContent          = 'Work'
-
-  // Add text to project sub-items
-  personalHome.textContent   = 'Home'
-  personalFamily.textContent = 'Family'
 
   // Add icon(s) to each item
+  mainAll.prepend(allIcon)
   mainToday.prepend(todayIcon)
   mainUpcoming.prepend(upcomingIcon)
   mainFilter.prepend(filterIcon)
@@ -90,31 +87,13 @@ const buildSidebar = () => {
   favoritesRecurring.prepend(recurringIcon)
   favoritesCalendar.prepend(calendarIcon)
   projectsHeader.prepend(newImg(chevronDownSvg))
-  projectsPersonal.prepend(circleGreenIcon)
-  projectsPersonal.prepend(newImg(chevronDownSmallSvg))
-  projectsWork.prepend(circleBlueIcon)
-  projectsWork.prepend(newImg(chevronDownSmallSvg))
-
-  personalHome.prepend(newImg(circleGreenSvg))
-  personalFamily.prepend(newImg(circleGreenSvg))
-
-  // Add 'extra-chevron' class to items that have two icons
-  projectsPersonal.classList.add('extra-chevron')
-  projectsWork.classList.add('extra-chevron')
-
-  // Add dataset to project category groupers
-  projectsPersonal.dataset.isProjParent = '1'
-  projectsPersonal.dataset.projName = 'personal'
-  personalHome.dataset.isProjChild = '1'
-  personalHome.dataset.projParent = 'personal'
-  personalFamily.dataset.isProjChild = '1'
-  personalFamily.dataset.projParent = 'personal'
 
   // Putting everything together
   sidebar
     .appendChild(mainTasksContainer)
     .appendChild(ulMain)
     .append(
+      mainAll,
       mainToday,
       mainUpcoming,
       mainFilter
@@ -135,10 +114,6 @@ const buildSidebar = () => {
     .appendChild(ulProjects)
     .append(
       projectsHeader,
-      projectsPersonal,
-      personalHome,
-      personalFamily,
-      projectsWork
     )
 
   return { sidebar, ulProjects }

@@ -1,11 +1,17 @@
 // TaskList class 
 
+import isAfter  from "date-fns/isAfter"
+import isBefore from "date-fns/isBefore"
+import isEqual  from "date-fns/isEqual"
+
 class TaskList {
   constructor() {
     this.#init()
     this.curFilter = {
-      priority: "",
-      project: ""
+      dueDate: '',
+      dateRange: '',
+      priority: '',
+      project: ''
     }
   }
 
@@ -18,7 +24,7 @@ class TaskList {
 
   add(task) {
     this.all.push(task)
-    this.amtAll++
+    this.amtAll += 1
 
     if (this.#shouldBeVisible(task)) {
       this.visible.push(task)
@@ -26,18 +32,13 @@ class TaskList {
     }
   }
 
-  delete(task) {
-    this.all = this.all.filter(t => t.id != task.id)
-    this.visible = this.all
-    this.amtAll -= 1
-    this.amtVisible -= 1
-  }
 
   /*
   sortType is one of:
   - 'dateAsc'
   - 'dateDesc'
   */
+
   sort(sortType) {
     let tmp = this.visible
 
@@ -52,25 +53,54 @@ class TaskList {
     return tmp
   }
 
+  addFilter(type, filter) { this.curFilter[type] = filter }
+
+  removeFilter(type) { this.curFilter[type] = '' }
+
+  /*
+  filterType is one of:
+  - 'dueDate'
+    - a Date() object
+  - 'dateRange'
+    - two Date objects in an array - ex. [d1, d2]
+  - 'priority'
+    - 'high', 'med', or 'low'
+  - 'project'
+    - project ID
+  */
+
   filter() {
-
+    this.visible = this.all.filter((task) => {
+      return this.#filterOneTask(task)
+    })
   }
 
-  #shouldBeVisible(task) {
-    if (this.curFilter.priority === '' && this.curFilter.project === '') {
-      return true
-    }
+  #filterOneTask(task) {
+    if (
+      this.curFilter.dueDate === '' &&
+      this.curFilter.dateRange === '' &&
+      this.curFilter.priority === '' &&
+      this.curFilter.project === ''
+    ) { return true }
+    for (const [key, value] of Object.entries(this.curFilter)) {
+      if (value === '') continue
+      if (key === 'dateRange') {
+        if (
+          isEqual(value[0], task.dueDate) || 
+          isEqual(value[1], task.dueDate)
+        ) { return true }
+        if (
+          isBefore(value[0], task.dueDate) &&
+          isAfter(value[1], task.dueDate)
+        ) { return true }
+      }
+      if (this.curFilter[value] == task[value]) return true
 
-    if (this.curFilter.priority) {
-      if (task.priority === this.curFilter.priority) return true
+      return false
     }
-
-    if (this.curFilter.project) {
-      if (task.project === this.curFilter.project) return true
-    }
-
-    return false
   }
+
+  #shouldBeVisible(task) { return this.#filterOneTask(task) }
 }
 
 export default TaskList

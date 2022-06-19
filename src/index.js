@@ -89,6 +89,13 @@ header.addEventListener('click', function(e) {
   }
 })
 
+// SIDEBAR //
+
+sidebar.addEventListener('click', function(e) {
+  console.log(e.target)
+  
+})
+
 // MAIN //
 
 // Filter tasks
