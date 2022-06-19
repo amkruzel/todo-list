@@ -12,7 +12,7 @@ This app will allow you to create tasks, assign them a priority and due date, gr
 
 ## Usage
 
-The project can be seen + used [here](link to gh pages)
+The project can be seen + used [here](https://amkruzel.github.io/todo-list/)
 
 ## License
 
