@@ -1,18 +1,12 @@
 // TaskList class 
 
-import isAfter  from "date-fns/isAfter"
-import isBefore from "date-fns/isBefore"
-import isEqual  from "date-fns/isEqual"
+import isAfter   from "date-fns/isAfter"
+import isBefore  from "date-fns/isBefore"
+import isSameDay from "date-fns/isSameDay"
 
 class TaskList {
   constructor() {
     this.#init()
-    this.curFilter = {
-      dueDate: '',
-      dateRange: '',
-      priority: '',
-      project: ''
-    }
   }
 
   #init() {
@@ -20,6 +14,12 @@ class TaskList {
     this.visible    = []
     this.amtAll     = 0
     this.amtVisible = 0
+    this.curFilter = {
+      dueDate: '',
+      dateRange: '',
+      priority: '',
+      project: ''
+    }
   }
 
   add(task) {
@@ -57,6 +57,15 @@ class TaskList {
 
   removeFilter(type) { this.curFilter[type] = '' }
 
+  clearFilters() { 
+    this.curFilter = {
+      dueDate: '',
+      dateRange: '',
+      priority: '',
+      project: ''
+    }
+  }
+
   /*
   filterType is one of:
   - 'dueDate'
@@ -82,22 +91,22 @@ class TaskList {
       this.curFilter.priority === '' &&
       this.curFilter.project === ''
     ) { return true }
+    
     for (const [key, value] of Object.entries(this.curFilter)) {
       if (value === '') continue
       if (key === 'dateRange') {
         if (
-          isEqual(value[0], task.dueDate) || 
-          isEqual(value[1], task.dueDate)
+          isSameDay(value[0], task.dueDate) || 
+          isSameDay(value[1], task.dueDate)
         ) { return true }
         if (
           isBefore(value[0], task.dueDate) &&
           isAfter(value[1], task.dueDate)
         ) { return true }
       }
-      if (this.curFilter[value] == task[value]) return true
-
-      return false
+      if (isSameDay(value, task[key])) return true
     }
+    return false
   }
 
   #shouldBeVisible(task) { return this.#filterOneTask(task) }

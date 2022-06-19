@@ -63,8 +63,9 @@ const buildSidebar = () => {
   const projectsHeader        = newElement('li', 'list-header', 'proj-header')
 
   // Add dataset properties
-  mainAll.dataset.filter = 'all'
-  mainToday.dataset.filter = 'today'
+  mainAll.dataset.filter      = 'all'
+  mainToday.dataset.filter    = 'today'
+  mainUpcoming.dataset.filter = 'upcoming'
 
   // Add text to each item
   mainAll.textContent               = 'All'

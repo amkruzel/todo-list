@@ -11,32 +11,32 @@ const buildMain = () => {
   const mainHeader = newElement('h3')
   mainHeader.textContent = 'Tasks'
 
-  const mainFilter = newElement('div', 'dropdown')
+  const mainSort = newElement('div', 'dropdown')
 
   const mainFilterContent = newElement('div', 'dropdown-content')
-  const filterDateAsc     = newElement('div', 'date-asc')
-  const filterDateDesc    = newElement('div', 'date-desc')
+  const sortDateAsc     = newElement('div', 'date-asc')
+  const sortDateDesc    = newElement('div', 'date-desc')
 
-  filterDateAsc.textContent  = 'Date ↑'
-  filterDateDesc.textContent = 'Date ↓'
+  sortDateAsc.textContent  = 'Date ↑'
+  sortDateDesc.textContent = 'Date ↓'
 
-  filterDateAsc.dataset.filterType  = 'dateAsc'
-  filterDateDesc.dataset.filterType = 'dateDesc'
+  sortDateAsc.dataset.sortType  = 'dateAsc'
+  sortDateDesc.dataset.sortType = 'dateDesc'
 
   mainFilterContent.append(
-    filterDateAsc,
-    filterDateDesc
+    sortDateAsc,
+    sortDateDesc
   )
 
-  mainFilter.textContent = 'View'
-  mainFilter.prepend(viewIcon)
-  mainFilter.append(mainFilterContent)
+  mainSort.textContent = 'View'
+  mainSort.prepend(viewIcon)
+  mainSort.append(mainFilterContent)
 
   main
   .appendChild(mainHeaderContainer)
-  .append(mainHeader, mainFilter)
+  .append(mainHeader, mainSort)
 
-  return { main, mainFilter }
+  return { main, mainSort }
 }
 
 export default buildMain

@@ -1,5 +1,7 @@
 import './style.css'
 
+import addDays from 'date-fns/addDays'
+
 import buildHeader  from './buildHeader'
 import buildSidebar from './buildSidebar'
 import buildMain    from './buildMain'
@@ -28,7 +30,7 @@ const {
 } = buildSidebar()
 const { 
   main, 
-  mainFilter 
+  mainSort 
 } = buildMain()
 
 
@@ -92,19 +94,31 @@ header.addEventListener('click', function(e) {
 // SIDEBAR //
 
 sidebar.addEventListener('click', function(e) {
-  console.log(e.target)
+  let f = e.target.dataset.filter
+
+  if (f === undefined) return
+  if (f === 'all') taskList.clearFilters()
+  if (f === 'today') taskList.addFilter('dueDate', new Date())
+  if (f === 'upcoming') {
+    taskList.addFilter('dateRange', [
+      new Date(),
+      addDays(new Date(), 7)
+    ])
+  }
   
+  
+  DOM.refreshTasks(main, taskList, projectList)
 })
 
 // MAIN //
 
-// Filter tasks
-mainFilter.addEventListener('click', function(e) {
+// Sort tasks
+mainSort.addEventListener('click', function(e) {
   DOM.refreshTasks(
     main, 
     taskList, 
     projectList, 
-    e.target.dataset.filterType)
+    e.target.dataset.sortType)
 })
 
 // MODALS //

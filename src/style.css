@@ -128,8 +128,7 @@ li div {
 
 li:hover {
   cursor: pointer;
-  transform: translateX(2px);
-  border-left: 3px solid var(--color-secondary);
+  transform: translateX(5px);
   border-radius: 8px;
 }
 

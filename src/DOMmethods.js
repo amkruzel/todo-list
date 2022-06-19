@@ -443,13 +443,7 @@ const DOMmethods = () => {
     }
   }
 
-  const refreshTasks = (
-    main, 
-    taskList, 
-    projectList, 
-    sortType = '', 
-    filterType = ''
-  ) => {
+  const refreshTasks = (main, taskList, projectList, sortType = '') => {
     taskList.filter()
     let ary = taskList.sort(sortType)
 
