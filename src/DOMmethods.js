@@ -471,6 +471,12 @@ const DOMmethods = () => {
       header.after(_createProject(proj))
     })
   }
+  
+  const refreshLi = (oldLi, newLi) => {
+    oldLi.classList.remove('selected-li')
+    newLi.classList.add('selected-li')
+  }
+
   return { 
     buildTaskFormModal, 
     buildProjectFormModal,
@@ -478,7 +484,8 @@ const DOMmethods = () => {
     showForm,
     closeAndClearForm,
     refreshTasks, 
-    refreshProjects
+    refreshProjects,
+    refreshLi
   }
 }
 

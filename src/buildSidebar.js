@@ -71,7 +71,7 @@ const buildSidebar = () => {
   mainAll.textContent               = 'All'
   mainToday.textContent             = 'Today'
   mainUpcoming.textContent          = 'Upcoming'
-  mainFilter.textContent            = 'Filters & Labels'
+  mainFilter.textContent            = 'Filters'
   favoritesHeader.textContent       = 'Favorites'
   favoritesHighPriority.textContent = 'Highest Priority'
   favoritesRecurring.textContent    = 'Recurring'

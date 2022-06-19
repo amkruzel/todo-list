@@ -95,8 +95,12 @@ header.addEventListener('click', function(e) {
 
 sidebar.addEventListener('click', function(e) {
   let f = e.target.dataset.filter
-
   if (f === undefined) return
+
+  let oldLi = document.querySelector('.selected-li')
+  let newLi = e.target
+
+  taskList.clearFilters()
   if (f === 'all') taskList.clearFilters()
   if (f === 'today') taskList.addFilter('dueDate', new Date())
   if (f === 'upcoming') {
@@ -108,6 +112,7 @@ sidebar.addEventListener('click', function(e) {
   
   
   DOM.refreshTasks(main, taskList, projectList)
+  DOM.refreshLi(oldLi, newLi)
 })
 
 // MAIN //
