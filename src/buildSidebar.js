@@ -66,6 +66,7 @@ const buildSidebar = () => {
   mainAll.dataset.filter      = 'all'
   mainToday.dataset.filter    = 'today'
   mainUpcoming.dataset.filter = 'upcoming'
+  mainFilter.dataset.filter   = 'filter'
 
   // Add text to each item
   mainAll.textContent               = 'All'

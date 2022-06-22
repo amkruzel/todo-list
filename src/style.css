@@ -304,6 +304,19 @@ form {
   height: 19.5px;
 }
 
+/* Filter form modal */
+
+.filter-form-header {
+  display: grid;
+  grid-auto-flow: column;
+}
+
+.filter-form-header p {
+  width: 300px;
+  font-weight: 500;
+  font-size: 18px;
+}
+
 /* text input */
 
 input[type='text'] {
@@ -330,6 +343,7 @@ textarea:focus {
   border: 1px solid black;
   box-shadow: none;
   padding: 5px;
+  resize: none;
 }
 
 /* Form priority selection */

@@ -287,12 +287,114 @@ const DOMmethods = () => {
     }
   }
 
+  const buildFilterModal = () => {
+    const modal     = newElement('div', 'modal')
+    const filterDiv = newElement('div', 'task-filters-modal', 'modal-content')
+    const form      = newElement('form')
+    const closeDiv  = newElement('div', 'filter-form-header')
+
+    // Form element labels
+    const formLabel         = newElement('p')
+    const priorityLabel     = newElement('p')
+    const highPriorityLabel = newElement('label')
+    const medPriorityLabel  = newElement('label')
+    const lowPriorityLabel  = newElement('label')
+    const projectLabel      = newElement('label')
+
+    // Associate labels with inputs
+    highPriorityLabel.setAttribute('for', 'high-priority')
+    medPriorityLabel.setAttribute('for', 'med-priority')
+    lowPriorityLabel.setAttribute('for', 'low-priority')
+    projectLabel.setAttribute('for', 'project')
+
+    formLabel.textContent = 'Filters'
+    priorityLabel.textContent = 'Priority: '
+    projectLabel.textContent = 'Project: '
+
+    // Create inputs
+    const highPriority  = newElement('input')
+    const medPriority   = newElement('input')
+    const lowPriority   = newElement('input')
+    const project       = newElement('select')
+    const applyBtn = newElement('button') 
+    const formCloseBtn  = newElement('span', 'close')
+
+    // Misc. attributes for each input
+    highPriorityLabel.textContent = 'High'
+    medPriorityLabel.textContent  = 'Medium'
+    lowPriorityLabel.textContent  = 'Low'
+
+    highPriority.type  = 'checkbox'
+    highPriority.name  = 'priority'
+    highPriority.value = 'high-priority'
+    highPriority.id    = 'high-priority'
+
+    medPriority.type  = 'checkbox'
+    medPriority.name  = 'priority'
+    medPriority.value = 'med-priority'
+    medPriority.id    = 'med-priority'
+
+    lowPriority.type  = 'checkbox'
+    lowPriority.name  = 'priority'
+    lowPriority.value = 'low-priority'
+    lowPriority.id    = 'low-priority'
+
+    project.name = 'project'
+    project.id   = 'project'
+
+    applyBtn.type        = 'button'
+    applyBtn.textContent = 'Apply'
+    applyBtn.classList.add('filter-submit-btn')
+
+    formCloseBtn.textContent = '\u2715'
+
+    // Input containers
+    const projectContainer  = newElement('div')
+    const priorityContainer = newElement('div', 'form-priority-radios')
+
+    projectContainer.append(projectLabel, project)
+
+    closeDiv.append(formLabel, formCloseBtn)
+
+    priorityContainer.append(
+      priorityLabel,
+      highPriority, 
+      highPriorityLabel,
+      medPriority, 
+      medPriorityLabel,
+      lowPriority,
+      lowPriorityLabel
+    )
+
+    form.append(
+      closeDiv,
+      priorityContainer,
+      projectContainer,
+      applyBtn
+    )
+
+    filterDiv.append(form)
+
+    modal.append(filterDiv)
+
+    return {
+      modal,
+      project,
+      applyBtn,
+      context: 'filter',
+      closeBtn: formCloseBtn,
+      priority: {
+        high: highPriority,
+        med: medPriority,
+        low: lowPriority
+      }
+    }
+  }
+
   const showForm = (form, projList = [], task) => {
 
     // Task input form
     if (form.context === 'task') {
-      console.log(form.priority)
-      
       // First item is 'None' so that is the default
       form.project.append(newOption('', 'None'))
       projList.all.forEach(proj => {
@@ -334,6 +436,18 @@ const DOMmethods = () => {
       form.dueDateDiv.innerHTML = '<b>Due date:</b> ' + format(task.dueDate, 'MMMM dd, yyyy')
 
       form.priorityDiv.innerHTML = '<b>Priority:</b> ' + pr
+    }
+
+    if (form.context === 'filter') {
+      projList.all.forEach(proj => {
+        form.project.append(
+          newOption(proj.id, proj.name)
+        )
+      })
+
+      form.priority.high.checked = true
+      form.priority.med.checked  = true
+      form.priority.low.checked  = true
     }
 
     form.modal.style.display = 'block'
@@ -481,6 +595,7 @@ const DOMmethods = () => {
     buildTaskFormModal, 
     buildProjectFormModal,
     buildTaskDetailsModal,
+    buildFilterModal,
     showForm,
     closeAndClearForm,
     refreshTasks, 

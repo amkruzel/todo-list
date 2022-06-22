@@ -38,6 +38,7 @@ const DOM         = DOMmethods()
 const taskForm    = DOM.buildTaskFormModal()
 const projectForm = DOM.buildProjectFormModal()
 const taskDetails = DOM.buildTaskDetailsModal()
+const filterForm  = DOM.buildFilterModal()
 
 const Page        = new PageProperties()
 const taskList    = new TaskList()
@@ -53,7 +54,8 @@ Content.append(
   main, 
   taskForm.modal, 
   projectForm.modal, 
-  taskDetails.modal
+  taskDetails.modal,
+  filterForm.modal
 )
 
 // Refresh tasks and projects - this will do nothing if there is nothing in localSorage
@@ -69,7 +71,7 @@ DOM.refreshProjects(ulProjects, projectList)
 header.addEventListener('click', function(e) {
   if (e.target === newTaskBtn) {
     if (!Page.isTaskFormOpen) {
-      Page.isTaskFormOpen = true
+      //Page.isTaskFormOpen = true
       DOM.showForm(taskForm, projectList)
       
     } else {
@@ -79,7 +81,7 @@ header.addEventListener('click', function(e) {
 
   if (e.target === newProjectBtn) {
     if (!Page.isProjectFormOpen) {
-      Page.isProjectFormOpen = true
+      //Page.isProjectFormOpen = true
       DOM.showForm(projectForm)
     } else {
       alert('You must save or close the current project before creating a new one.')
@@ -109,6 +111,10 @@ sidebar.addEventListener('click', function(e) {
       addDays(new Date(), 7)
     ])
   }
+
+  if (f === 'filter') {
+    DOM.showForm(filterForm, projectList)
+  }
   
   
   DOM.refreshTasks(main, taskList, projectList)
@@ -128,28 +134,26 @@ mainSort.addEventListener('click', function(e) {
 
 // MODALS //
 
-function closeForm(f) {
-  DOM.closeAndClearForm(f)
-  Page.isTaskFormOpen    = false
-  Page.isProjectFormOpen = false
-}
-
 // Close modals by clicking outside of them
 window.onclick = function(event) {
-  if (event.target === taskForm.modal) closeForm(taskForm)
-  if (event.target === projectForm.modal) closeForm(projectForm)
-  if (event.target === taskDetails.modal) closeForm(taskDetails)
+  if (event.target === taskForm.modal) DOM.closeAndClearForm(taskForm)
+  if (event.target === projectForm.modal) DOM.closeAndClearForm(projectForm)
+  if (event.target === taskDetails.modal) DOM.closeAndClearForm(taskDetails)
+  if (event.target === filterForm.modal) DOM.closeAndClearForm(filterForm)
 }
 
 // Close modals by clicking 'x'
 taskForm.closeBtn.addEventListener('click', function() { 
-  closeForm(taskForm) 
+  DOM.closeAndClearForm(taskForm) 
 })
 projectForm.closeBtn.addEventListener('click', function() { 
-  closeForm(projectForm) 
+  DOM.closeAndClearForm(projectForm) 
 })
 taskDetails.closeBtn.addEventListener('click', function() {
-  closeForm(taskDetails)
+  DOM.closeAndClearForm(taskDetails)
+})
+filterForm.closeBtn.addEventListener('click', function() {
+  DOM.closeAndClearForm(filterForm)
 })
 
 // Main event listeners
@@ -221,7 +225,7 @@ taskForm.submitBtn.addEventListener('click', function() {
   // Update sidebar
   DOM.refreshProjects(ulProjects, projectList)
   
-  closeForm(taskForm)
+  DOM.closeAndClearForm(taskForm)
 
   // return if new task does not show
   // also show msg to user
@@ -247,7 +251,7 @@ projectForm.submitBtn.addEventListener('click', function() {
   }
 
   projectList.add(new Project(results))
-  closeForm(projectForm)
+  DOM.closeAndClearForm(projectForm)
   DOM.refreshProjects(ulProjects, projectList)
   SaveData(taskList, projectList)
 })
