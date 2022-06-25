@@ -102,20 +102,18 @@ sidebar.addEventListener('click', function(e) {
   let oldLi = document.querySelector('.selected-li')
   let newLi = e.target
 
-  taskList.clearFilters()
-  if (f === 'all') taskList.clearFilters()
+  if (/all|today|upcoming/.test(f)) taskList.clearFilters()
   if (f === 'today') taskList.addFilter('dueDate', new Date())
   if (f === 'upcoming') {
-    taskList.addFilter('dateRange', [
-      new Date(),
-      addDays(new Date(), 7)
-    ])
+    taskList.addFilter(
+      'dateRange', 
+      [new Date(), addDays(new Date(), 7)]
+    )
   }
 
   if (f === 'filter') {
     DOM.showForm(filterForm, projectList)
   }
-  
   
   DOM.refreshTasks(main, taskList, projectList)
   DOM.refreshLi(oldLi, newLi)
@@ -186,6 +184,15 @@ main.addEventListener('click', function(e) {
         refresh()
       }
     })
+  }
+})
+
+// New filters apply
+filterForm.applyBtn.addEventListener('click', function() {
+  let visiblePriorities = {
+    'high': filterForm.priority.high.checked,
+    'med': filterForm.priority.med.checked,
+    'low': filterForm.priority.low.checked
   }
 })
 

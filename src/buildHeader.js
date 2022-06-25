@@ -10,7 +10,7 @@ const buildHeader = () => {
   header.textContent        = '// TO-DO'
 
   const clearStorageBtn = newElement('button', 'new-item-btn', 'clear-storage')
-  clearStorageBtn.textContent = 'Clear localStorage'
+  clearStorageBtn.textContent = 'Clear all Data'
   
   header.append(newTaskBtn, newProjectBtn, clearStorageBtn)
 

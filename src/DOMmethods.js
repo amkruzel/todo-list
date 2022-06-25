@@ -555,6 +555,9 @@ const DOMmethods = () => {
     if (form.context === 'project') {
       _clearForm(form.name, form.desc, form.color)
     }
+    if (form.context === 'filter') {
+      form.project.replaceChildren()
+    }
   }
 
   const refreshTasks = (main, taskList, projectList, sortType = '') => {
